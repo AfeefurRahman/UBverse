@@ -6,7 +6,7 @@
 
   <meta
     name="description"
-    content="UBverse is a student-built campus companion for international students at the University at Buffalo."
+    content="Translate text between popular world languages with the UBverse Translator."
   >
 
   <title>Translator | UBverse</title>
@@ -23,23 +23,421 @@
   >
 
   <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .translator-page {
+      width: min(820px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 38px 0 44px;
+    }
+
+    .translator-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .translator-header h1 {
+      margin: 0 0 8px;
+      color: #f8fafc;
+      font-size: clamp(2rem, 4vw, 2.55rem);
+      line-height: 1.1;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .translator-header p {
+      margin: 0;
+      color: #c4cde0;
+      font-size: 1rem;
+      line-height: 1.55;
+    }
+
+    .translator-card {
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+      box-sizing: border-box;
+      background: #232634;
+      border: 1px solid #383d50;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.12);
+      padding: 28px;
+    }
+
+    .language-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .language-field label {
+      display: block;
+      margin-bottom: 8px;
+      color: #f3f6fb;
+      font-size: .95rem;
+      font-weight: 800;
+    }
+
+    .translator-card select,
+    .translator-card textarea {
+      display: block;
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+      margin: 0 !important;
+      border: 1px solid #3d455d;
+      border-radius: 11px;
+      font: inherit;
+      outline: none;
+    }
+
+    .translator-card select {
+      height: 50px;
+      padding: 0 14px;
+      background: #eef4ff;
+      color: #111827;
+    }
+
+    .translator-card textarea {
+      min-height: 170px;
+      padding: 15px 16px;
+      background: #eef4ff;
+      color: #111827;
+      line-height: 1.55;
+      resize: vertical;
+    }
+
+    .translator-card select:focus,
+    .translator-card textarea:focus {
+      border-color: #4f8fff;
+      box-shadow: 0 0 0 3px rgba(79,143,255,.15);
+    }
+
+    .swap-btn {
+      width: 48px;
+      height: 48px;
+      margin-top: 27px;
+      border: 1px solid #4b5570;
+      border-radius: 12px;
+      background: #34394f;
+      color: #fff;
+      font-size: 1.4rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background .15s ease, transform .15s ease;
+    }
+
+    .swap-btn:hover {
+      background: #2563eb;
+      transform: translateY(-1px);
+    }
+
+    .text-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .text-panel label {
+      display: block;
+      margin-bottom: 8px;
+      color: #f3f6fb;
+      font-size: .95rem;
+      font-weight: 800;
+    }
+
+    .action-row {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .translate-btn {
+      min-width: 190px;
+      border: 0;
+      border-radius: 11px;
+      padding: 14px 22px;
+      background: #2563eb;
+      color: #fff;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background .15s ease, transform .15s ease;
+    }
+
+    .translate-btn:hover:not(:disabled) {
+      background: #1d4ed8;
+      transform: translateY(-1px);
+    }
+
+    .translate-btn:disabled {
+      opacity: .65;
+      cursor: not-allowed;
+    }
+
+    .status {
+      min-height: 22px;
+      margin: 14px 0 0;
+      text-align: center;
+      color: #bdc7da;
+      font-size: .9rem;
+      line-height: 1.45;
+    }
+
+    .status.error {
+      color: #fca5a5;
+    }
+
+    .status.success {
+      color: #86efac;
+    }
+
+    .translator-note {
+      margin-top: 34px;
+      text-align: center;
+      color: #9daac5;
+      font-size: .84rem;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 700px) {
+      .translator-page {
+        padding-top: 28px;
+      }
+
+      .translator-card {
+        padding: 22px 18px;
+      }
+
+      .language-row {
+        grid-template-columns: 1fr;
+      }
+
+      .swap-btn {
+        width: 100%;
+        margin-top: 0;
+      }
+
+      .text-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
+
 <body>
-  <nav class="topnav" aria-label="Main navigation">
+  <div class="topnav">
     <div class="topnav-content">
       <a class="nav-left" href="index.html" style="text-decoration:none" aria-label="UBverse home">
-        <img src="ub.jpg" alt="UBverse logo" class="logo"><span class="logo-text">UBverse</span>
+        <img src="favicon.png" alt="UBverse logo" class="logo">
+        <span class="logo-text">UBverse</span>
       </a>
+
       <div class="nav-right">
-        <a href="index.html">Home</a><a class="active" aria-current="page" href="translator.html">Translator</a><a href="map.html">Map</a><a href="region.html">Region Matcher</a><a href="mood.html">Mood Tracker</a>
+        <a href="index.html">Home</a>
+        <a class="active" aria-current="page" href="translator.html">Translator</a>
+        <a href="map.html">Map</a>
+        <a href="region.html">Region Matcher</a>
+        <a href="mood.html">Mood Tracker</a>
       </div>
     </div>
-  </nav>
+  </div>
 
-  <main class="dashboard-section">
-    <div class="dashboard-header">
-      <h1>Web Translator</h1>
-      <p>Translate common everyday text between popular languages.</p>
-    </div>
+  <main class="translator-page">
+    <header class="translator-header">
+      <h1>🌐 Translator</h1>
+      <p>Translate text between popular world languages.</p>
+    </header>
 
-    <div class="center-form">
+    <section class="translator-card">
+      <div class="language-row">
+        <div class="language-field">
+          <label for="source-lang">From</label>
+          <select id="source-lang">
+            <option value="en">English</option>
+            <option value="hi">Hindi हिन्दी</option>
+            <option value="bn">Bangla বাংলা</option>
+            <option value="es">Spanish Español</option>
+            <option value="fr">French Français</option>
+            <option value="de">German Deutsch</option>
+            <option value="it">Italian Italiano</option>
+            <option value="zh">Chinese 中文</option>
+            <option value="ar">Arabic العربية</option>
+            <option value="ja">Japanese 日本語</option>
+            <option value="ko">Korean 한국어</option>
+          </select>
+        </div>
+
+        <button
+          id="swap-btn"
+          class="swap-btn"
+          type="button"
+          title="Swap languages"
+          aria-label="Swap source and target languages"
+        >
+          ⇄
+        </button>
+
+        <div class="language-field">
+          <label for="target-lang">To</label>
+          <select id="target-lang">
+            <option value="en">English</option>
+            <option value="hi">Hindi हिन्दी</option>
+            <option value="bn" selected>Bangla বাংলা</option>
+            <option value="es">Spanish Español</option>
+            <option value="fr">French Français</option>
+            <option value="de">German Deutsch</option>
+            <option value="it">Italian Italiano</option>
+            <option value="zh">Chinese 中文</option>
+            <option value="ar">Arabic العربية</option>
+            <option value="ja">Japanese 日本語</option>
+            <option value="ko">Korean 한국어</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="text-grid">
+        <div class="text-panel">
+          <label for="input-text">Text to translate</label>
+          <textarea
+            id="input-text"
+            maxlength="1000"
+            placeholder="Enter text here..."
+          ></textarea>
+        </div>
+
+        <div class="text-panel">
+          <label for="output-text">Translation</label>
+          <textarea
+            id="output-text"
+            placeholder="Translation will appear here..."
+            readonly
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button id="translate-btn" class="translate-btn" type="button">
+          Translate
+        </button>
+      </div>
+
+      <p id="translate-status" class="status" aria-live="polite"></p>
+    </section>
+
+    <p class="translator-note">
+      Translation is provided by the MyMemory translation service. For important academic or official documents, verify the translation with a qualified person.
+    </p>
+  </main>
+
+  <script>
+    (() => {
+      const sourceLang = document.getElementById('source-lang');
+      const targetLang = document.getElementById('target-lang');
+      const inputText = document.getElementById('input-text');
+      const outputText = document.getElementById('output-text');
+      const translateBtn = document.getElementById('translate-btn');
+      const swapBtn = document.getElementById('swap-btn');
+      const status = document.getElementById('translate-status');
+
+      function setStatus(message, type = '') {
+        status.className = `status${type ? ` ${type}` : ''}`;
+        status.textContent = message;
+      }
+
+      async function translateText() {
+        const text = inputText.value.trim();
+
+        if (!text) {
+          outputText.value = '';
+          setStatus('Please enter some text to translate.', 'error');
+          inputText.focus();
+          return;
+        }
+
+        if (sourceLang.value === targetLang.value) {
+          outputText.value = text;
+          setStatus('Source and target languages are the same.', 'success');
+          return;
+        }
+
+        translateBtn.disabled = true;
+        translateBtn.textContent = 'Translating...';
+        outputText.value = '';
+        setStatus('Translating...');
+
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 12000);
+
+        const url =
+          'https://api.mymemory.translated.net/get?q=' +
+          encodeURIComponent(text) +
+          '&langpair=' +
+          encodeURIComponent(sourceLang.value + '|' + targetLang.value);
+
+        try {
+          const response = await fetch(url, {
+            method: 'GET',
+            signal: controller.signal
+          });
+
+          if (!response.ok) {
+            throw new Error(`Translation request failed (${response.status})`);
+          }
+
+          const data = await response.json();
+
+          if (
+            data &&
+            data.responseData &&
+            typeof data.responseData.translatedText === 'string'
+          ) {
+            outputText.value = data.responseData.translatedText;
+            setStatus('Translation complete.', 'success');
+          } else {
+            throw new Error('No translation was returned.');
+          }
+        } catch (error) {
+          console.error(error);
+
+          if (error.name === 'AbortError') {
+            setStatus('The translation service took too long to respond. Please try again.', 'error');
+          } else {
+            setStatus('Could not connect to the translation service. Please try again.', 'error');
+          }
+        } finally {
+          clearTimeout(timeout);
+          translateBtn.disabled = false;
+          translateBtn.textContent = 'Translate';
+        }
+      }
+
+      translateBtn.addEventListener('click', translateText);
+
+      inputText.addEventListener('keydown', (event) => {
+        if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+          event.preventDefault();
+          translateText();
+        }
+      });
+
+      swapBtn.addEventListener('click', () => {
+        const oldSource = sourceLang.value;
+        sourceLang.value = targetLang.value;
+        targetLang.value = oldSource;
+
+        if (outputText.value.trim()) {
+          const oldInput = inputText.value;
+          inputText.value = outputText.value;
+          outputText.value = oldInput;
+        }
+
+        setStatus('');
+      });
+    })();
+  </script>
+</body>
+</html>

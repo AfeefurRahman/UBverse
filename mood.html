@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Campus Mood Tracker | UBverse</title>
+  <!-- STATIC GITHUB PAGES VERSION: NO FETCH / NO API -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 
@@ -295,6 +296,8 @@
 
   <script>
     (() => {
+      // UBverse Mood Tracker — GitHub Pages static version.
+      // IMPORTANT: This file makes NO fetch/API requests.
       const STORAGE_KEY = 'ubverseCampusMood';
       const VOTE_DATE_KEY = 'ubverseMoodVoteDate';
       const SELECTED_MOOD_KEY = 'ubverseMoodSelectedToday';
@@ -323,9 +326,25 @@
         Tough: 'Tough is currently the most selected mood. 😢'
       };
 
-      const buttons = [...document.querySelectorAll('.mood-option')];
-      const status = document.getElementById('vote-status');
-      const resultsMessage = document.getElementById('results-message');
+      const memoryStore = new Map();
+
+      function safeGet(key) {
+        try {
+          return localStorage.getItem(key);
+        } catch {
+          return memoryStore.has(key) ? memoryStore.get(key) : null;
+        }
+      }
+
+      function safeSet(key, value) {
+        memoryStore.set(key, value);
+        try {
+          localStorage.setItem(key, value);
+          return true;
+        } catch {
+          return false;
+        }
+      }
 
       function todayKey() {
         const now = new Date();
@@ -337,17 +356,26 @@
 
       function loadCounts() {
         try {
-          const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+          const raw = safeGet(STORAGE_KEY);
+          if (!raw) return { ...defaults };
+
+          const saved = JSON.parse(raw);
           if (!saved || typeof saved !== 'object') return { ...defaults };
 
           return Object.fromEntries(
-            Object.keys(defaults).map(mood => [mood, Math.max(0, Number(saved[mood]) || 0)])
+            Object.keys(defaults).map(mood => [
+              mood,
+              Math.max(0, Number(saved[mood]) || 0)
+            ])
           );
         } catch {
           return { ...defaults };
         }
       }
 
+      const buttons = [...document.querySelectorAll('.mood-option')];
+      const status = document.getElementById('vote-status');
+      const resultsMessage = document.getElementById('results-message');
       let counts = loadCounts();
 
       function renderResults() {
@@ -356,9 +384,11 @@
         Object.entries(config).forEach(([mood, item]) => {
           const pct = total === 0 ? 0 : Math.round((counts[mood] / total) * 100);
           const bar = document.getElementById(item.bar);
-          document.getElementById(item.percent).textContent = `${pct}%`;
+          const percent = document.getElementById(item.percent);
+
           bar.style.width = `${pct}%`;
           bar.style.backgroundColor = item.color;
+          percent.textContent = `${pct}%`;
         });
 
         if (total === 0) {
@@ -370,19 +400,23 @@
           counts[mood] > counts[best] ? mood : best
         );
 
-        resultsMessage.textContent = `${comments[topMood]} Total saved votes: ${total}.`;
+        resultsMessage.textContent =
+          `${comments[topMood]} Total saved votes in this browser: ${total}.`;
       }
 
       function renderVoteState() {
-        const votedToday = localStorage.getItem(VOTE_DATE_KEY) === todayKey();
-        const selectedMood = votedToday ? localStorage.getItem(SELECTED_MOOD_KEY) : null;
+        const votedToday = safeGet(VOTE_DATE_KEY) === todayKey();
+        const selectedMood = votedToday ? safeGet(SELECTED_MOOD_KEY) : null;
 
         buttons.forEach(button => {
           button.disabled = votedToday;
-          button.classList.toggle('selected', votedToday && button.dataset.mood === selectedMood);
+          button.classList.toggle(
+            'selected',
+            votedToday && button.dataset.mood === selectedMood
+          );
         });
 
-        status.classList.toggle('success', votedToday);
+        status.className = votedToday ? 'success' : '';
         status.textContent = votedToday
           ? `Today's mood saved${selectedMood ? `: ${selectedMood}` : ''}. You can vote again tomorrow.`
           : 'Choose one mood for today.';
@@ -390,18 +424,28 @@
 
       buttons.forEach(button => {
         button.addEventListener('click', () => {
-          if (localStorage.getItem(VOTE_DATE_KEY) === todayKey()) return;
+          if (safeGet(VOTE_DATE_KEY) === todayKey()) {
+            renderVoteState();
+            return;
+          }
 
           const mood = button.dataset.mood;
           if (!Object.prototype.hasOwnProperty.call(counts, mood)) return;
 
           counts[mood] += 1;
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(counts));
-          localStorage.setItem(VOTE_DATE_KEY, todayKey());
-          localStorage.setItem(SELECTED_MOOD_KEY, mood);
+
+          const persisted = safeSet(STORAGE_KEY, JSON.stringify(counts));
+          safeSet(VOTE_DATE_KEY, todayKey());
+          safeSet(SELECTED_MOOD_KEY, mood);
 
           renderResults();
           renderVoteState();
+
+          if (!persisted) {
+            status.className = 'success';
+            status.textContent =
+              `Mood selected: ${mood}. Your browser blocked permanent storage, so this result may reset after you close the page.`;
+          }
         });
       });
 

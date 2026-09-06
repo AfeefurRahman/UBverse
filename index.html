@@ -23,17 +23,443 @@
     rel="stylesheet"
   >
 
-  <link rel="stylesheet" href="styles.css">
-
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", sans-serif;
+      background: #151823;
+      color: #ffffff;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+    }
+
     /* =========================
-       PAGE ANIMATIONS
+       NAV
+       ========================= */
+
+    .topnav {
+      width: 100%;
+      background: #121522;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      animation: fadeDown 0.7s ease both;
+    }
+
+    .topnav-content {
+      width: min(1200px, calc(100% - 40px));
+      min-height: 72px;
+      margin: 0 auto;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 30px;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+      text-decoration: none;
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 800;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .nav-right a {
+      padding: 12px 15px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 700;
+      color: #e4e8f4;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .nav-right a:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-right a.active {
+      background: #2468e5;
+      color: #ffffff;
+    }
+
+    /* =========================
+       HERO
+       ========================= */
+
+    .hero {
+      position: relative;
+      width: 100%;
+      min-height: 670px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background:
+        linear-gradient(
+          rgba(8, 12, 27, 0.48),
+          rgba(8, 12, 27, 0.72)
+        ),
+        url("hero.jpg") center center / cover no-repeat;
+
+      overflow: hidden;
+    }
+
+    .hero-content {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 70px 24px 65px;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      text-align: center;
+    }
+
+    .hero h1 {
+      margin: 0;
+      max-width: 1100px;
+
+      font-size: clamp(2.7rem, 5vw, 4.3rem);
+      line-height: 1.05;
+      font-weight: 800;
+
+      animation: fadeUp 0.8s ease 0.1s both;
+    }
+
+    .hero p {
+      max-width: 850px;
+      margin: 22px auto 0;
+
+      font-size: 1.2rem;
+      line-height: 1.55;
+      color: #f0f2f7;
+
+      animation: fadeUp 0.8s ease 0.25s both;
+    }
+
+    /* =========================
+       BUTTONS
+       ========================= */
+
+    .hero-buttons {
+      width: 100%;
+      margin-top: 30px;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+
+      animation: fadeUp 0.8s ease 0.4s both;
+    }
+
+    .btn {
+      min-height: 52px;
+      padding: 0 24px;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 800;
+
+      transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-blue {
+      background: #2468e5;
+      color: #ffffff;
+      border: 1px solid #2468e5;
+    }
+
+    .btn-blue:hover {
+      background: #1759cf;
+      border-color: #1759cf;
+    }
+
+    .btn-transparent {
+      background: rgba(255, 255, 255, 0.06);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.55);
+    }
+
+    .btn-transparent:hover {
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    /* =========================
+       HERO FEATURE CARDS
+       ========================= */
+
+    .features-wrapper {
+      width: 100%;
+      margin-top: 42px;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      animation: fadeUp 0.9s ease 0.55s both;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(4, 165px);
+      justify-content: center;
+      align-items: stretch;
+      gap: 18px;
+
+      width: auto;
+      margin: 0 auto;
+      padding: 0;
+    }
+
+    .feature-link {
+      width: 165px;
+      text-decoration: none;
+    }
+
+    .feature-btn {
+      width: 165px;
+      height: 165px;
+      padding: 24px 16px;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      background: rgba(31, 34, 48, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 16px;
+
+      transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+    }
+
+    .feature-btn:hover {
+      transform: translateY(-6px);
+      background: rgba(42, 46, 63, 0.96);
+      border-color: rgba(255, 255, 255, 0.28);
+    }
+
+    .feature-btn img {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 16px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    .feature-btn span {
+      font-size: 1rem;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    /* =========================
+       STATS
+       ========================= */
+
+    .stats-section {
+      width: 100%;
+      background: #202330;
+      padding: 44px 20px;
+    }
+
+    .stats-center {
+      width: min(1100px, calc(100% - 40px));
+      margin: 0 auto;
+
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+
+      text-align: center;
+    }
+
+    .stats-center > div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+
+      color: #e9ebf2;
+      font-size: 1rem;
+    }
+
+    .stats-big {
+      display: block;
+      font-size: 2.1rem;
+      line-height: 1;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    /* =========================
+       LOWER FEATURES
+       ========================= */
+
+    .features-section {
+      width: min(1200px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 80px 0;
+    }
+
+    .features-header {
+      max-width: 760px;
+      margin: 0 auto 42px;
+      text-align: center;
+    }
+
+    .features-header h2 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 800;
+    }
+
+    .features-header p {
+      margin: 16px 0 0;
+      color: #b9becd;
+      font-size: 1.05rem;
+      line-height: 1.6;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 22px;
+    }
+
+    .card {
+      background: #202330;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+    }
+
+    .feature-card {
+      padding: 28px;
+
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+
+      transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+      border-color: rgba(80, 140, 255, 0.35);
+    }
+
+    .feature-card img {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      object-fit: cover;
+    }
+
+    .feature-card h3 {
+      margin: 0 0 12px;
+      font-size: 1.25rem;
+      font-weight: 800;
+    }
+
+    .feature-card p {
+      margin: 0 0 24px;
+      line-height: 1.6;
+      color: #bcc1cf;
+    }
+
+    .feature-card .btn {
+      margin-top: auto;
+    }
+
+    /* =========================
+       DISCLAIMER / FOOTER
+       ========================= */
+
+    .disclaimer {
+      width: min(1000px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 0 0 50px;
+      text-align: center;
+      color: #9298a8;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    footer {
+      padding: 24px 20px;
+      background: #10131d;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      text-align: center;
+      color: #949aaa;
+      font-size: 0.9rem;
+    }
+
+    /* =========================
+       ANIMATIONS
        ========================= */
 
     @keyframes fadeUp {
       from {
         opacity: 0;
-        transform: translateY(28px);
+        transform: translateY(26px);
       }
 
       to {
@@ -45,7 +471,7 @@
     @keyframes fadeDown {
       from {
         opacity: 0;
-        transform: translateY(-20px);
+        transform: translateY(-18px);
       }
 
       to {
@@ -61,53 +487,8 @@
       }
 
       50% {
-        transform: translateY(-8px);
+        transform: translateY(-7px);
       }
-    }
-
-    @keyframes softPulse {
-      0%,
-      100% {
-        box-shadow: 0 0 0 rgba(36, 104, 229, 0);
-      }
-
-      50% {
-        box-shadow: 0 0 28px rgba(36, 104, 229, 0.35);
-      }
-    }
-
-    @keyframes backgroundZoom {
-      from {
-        background-size: 100%;
-      }
-
-      to {
-        background-size: 106%;
-      }
-    }
-
-    .topnav {
-      animation: fadeDown 0.7s ease both;
-    }
-
-    .hero {
-      animation: backgroundZoom 12s ease-in-out alternate infinite;
-    }
-
-    .hero h1 {
-      animation: fadeUp 0.8s ease 0.1s both;
-    }
-
-    .hero p {
-      animation: fadeUp 0.8s ease 0.25s both;
-    }
-
-    .hero-buttons {
-      animation: fadeUp 0.8s ease 0.4s both;
-    }
-
-    .features-wrapper {
-      animation: fadeUp 0.9s ease 0.55s both;
     }
 
     .feature-link:nth-child(1) .feature-btn {
@@ -126,13 +507,7 @@
       animation: floatCard 4.5s ease-in-out 1.05s infinite;
     }
 
-    .btn-blue {
-      animation: softPulse 3.5s ease-in-out infinite;
-    }
-
-    .stats-section,
-    .features-section,
-    .disclaimer {
+    .reveal {
       opacity: 0;
       transform: translateY(30px);
       transition:
@@ -140,25 +515,118 @@
         transform 0.8s ease;
     }
 
-    .show {
+    .reveal.show {
       opacity: 1;
       transform: translateY(0);
     }
 
-    .feature-card {
-      transition:
-        transform 0.25s ease,
-        box-shadow 0.25s ease,
-        border-color 0.25s ease;
+    /* =========================
+       TABLET
+       ========================= */
+
+    @media (max-width: 1000px) {
+
+      .topnav-content {
+        flex-direction: column;
+        justify-content: center;
+        padding: 16px 0;
+      }
+
+      .nav-right {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .hero {
+        min-height: auto;
+      }
     }
 
-    .feature-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
-      border-color: rgba(80, 140, 255, 0.35);
+    /* =========================
+       MOBILE
+       ========================= */
+
+    @media (max-width: 750px) {
+
+      .features {
+        grid-template-columns: repeat(2, minmax(140px, 165px));
+        width: 100%;
+      }
+
+      .feature-link {
+        width: 100%;
+      }
+
+      .feature-btn {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 650px) {
+
+      .topnav-content {
+        width: min(100% - 24px, 1200px);
+      }
+
+      .nav-right {
+        width: 100%;
+        gap: 6px;
+      }
+
+      .nav-right a {
+        padding: 9px 10px;
+        font-size: 0.85rem;
+      }
+
+      .hero-content {
+        padding: 55px 18px;
+      }
+
+      .hero h1 {
+        font-size: 2.35rem;
+      }
+
+      .hero p {
+        font-size: 1rem;
+      }
+
+      .hero-buttons {
+        width: 100%;
+      }
+
+      .hero-buttons .btn {
+        width: 100%;
+        max-width: 300px;
+      }
+
+      .stats-center {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .features-section {
+        width: min(100% - 28px, 1200px);
+        padding: 60px 0;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 420px) {
+
+      .features {
+        grid-template-columns: 165px;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
+
       *,
       *::before,
       *::after {
@@ -167,9 +635,7 @@
         scroll-behavior: auto !important;
       }
 
-      .stats-section,
-      .features-section,
-      .disclaimer {
+      .reveal {
         opacity: 1;
         transform: none;
       }
@@ -182,56 +648,23 @@
   <nav class="topnav" aria-label="Main navigation">
     <div class="topnav-content">
 
-      <a
-        class="nav-left"
-        href="index.html"
-        style="text-decoration: none"
-        aria-label="UBverse home"
-      >
-        <img
-          src="ub.jpg"
-          alt="UBverse logo"
-          class="logo"
-        >
-
+      <a class="nav-left" href="index.html" aria-label="UBverse home">
+        <img src="ub.jpg" alt="UBverse logo" class="logo">
         <span class="logo-text">UBverse</span>
       </a>
 
       <div class="nav-right">
-        <a
-          class="active"
-          aria-current="page"
-          href="index.html"
-        >
-          Home
-        </a>
-
-        <a href="translator.html">
-          Translator
-        </a>
-
-        <a href="map.html">
-          Map
-        </a>
-
-        <a href="region.html">
-          Region Matcher
-        </a>
-
-        <a href="mood.html">
-          Mood Tracker
-        </a>
+        <a class="active" aria-current="page" href="index.html">Home</a>
+        <a href="translator.html">Translator</a>
+        <a href="map.html">Map</a>
+        <a href="region.html">Region Matcher</a>
+        <a href="mood.html">Mood Tracker</a>
       </div>
 
     </div>
   </nav>
 
-
   <main>
-
-    <!-- =========================
-         HERO
-         ========================= -->
 
     <section class="hero">
 
@@ -248,110 +681,45 @@
 
         <div class="hero-buttons">
 
-          <a
-            href="#features"
-            class="btn btn-blue"
-          >
+          <a href="#features" class="btn btn-blue">
             Explore Tools
           </a>
 
-          <a
-            href="region.html"
-            class="btn btn-transparent"
-          >
+          <a href="region.html" class="btn btn-transparent">
             Connect Now
           </a>
 
         </div>
 
-
-        <!-- =========================
-             HERO QUICK TOOLS
-             ========================= -->
-
         <div class="features-wrapper">
 
-          <div
-            class="features"
-            aria-label="UBverse tools"
-          >
+          <div class="features" aria-label="UBverse tools">
 
-            <a
-              href="translator.html"
-              class="feature-link"
-            >
+            <a href="translator.html" class="feature-link">
               <div class="feature-btn">
-
-                <img
-                  src="translate.jpg"
-                  alt=""
-                  loading="lazy"
-                >
-
-                <span>
-                  Translator
-                </span>
-
+                <img src="translate.jpg" alt="" loading="lazy">
+                <span>Translator</span>
               </div>
             </a>
 
-
-            <a
-              href="map.html"
-              class="feature-link"
-            >
+            <a href="map.html" class="feature-link">
               <div class="feature-btn">
-
-                <img
-                  src="map-icon.svg"
-                  alt=""
-                  loading="lazy"
-                >
-
-                <span>
-                  City Map
-                </span>
-
+                <img src="map-icon.svg" alt="" loading="lazy">
+                <span>City Map</span>
               </div>
             </a>
 
-
-            <a
-              href="region.html"
-              class="feature-link"
-            >
+            <a href="region.html" class="feature-link">
               <div class="feature-btn">
-
-                <img
-                  src="region.jpg"
-                  alt=""
-                  loading="lazy"
-                >
-
-                <span>
-                  Find Friends
-                </span>
-
+                <img src="region.jpg" alt="" loading="lazy">
+                <span>Find Friends</span>
               </div>
             </a>
 
-
-            <a
-              href="mood.html"
-              class="feature-link"
-            >
+            <a href="mood.html" class="feature-link">
               <div class="feature-btn">
-
-                <img
-                  src="mood.jpg"
-                  alt=""
-                  loading="lazy"
-                >
-
-                <span>
-                  Mood Tracker
-                </span>
-
+                <img src="mood.jpg" alt="" loading="lazy">
+                <span>Mood Tracker</span>
               </div>
             </a>
 
@@ -360,12 +728,8 @@
         </div>
 
       </div>
+
     </section>
-
-
-    <!-- =========================
-         STATS
-         ========================= -->
 
     <section
       class="stats-section reveal"
@@ -375,39 +739,23 @@
       <div class="stats-center">
 
         <div>
-          <span class="stats-big">
-            8,000+
-          </span>
-
+          <span class="stats-big">8,000+</span>
           International Students
         </div>
 
-
         <div>
-          <span class="stats-big">
-            50+
-          </span>
-
+          <span class="stats-big">50+</span>
           Languages Spoken
         </div>
 
-
         <div>
-          <span class="stats-big">
-            4
-          </span>
-
+          <span class="stats-big">4</span>
           Integrated Student Tools
         </div>
 
       </div>
 
     </section>
-
-
-    <!-- =========================
-         FEATURE DETAILS
-         ========================= -->
 
     <section
       id="features"
@@ -421,15 +769,12 @@
         </h2>
 
         <p>
-          Four simple tools designed around common needs
-          of international students at UB.
+          Four simple tools designed around common needs of international students at UB.
         </p>
 
       </div>
 
-
       <div class="features-grid">
-
 
         <article class="feature-card card">
 
@@ -439,24 +784,17 @@
             loading="lazy"
           >
 
-          <h3>
-            Translator Tool
-          </h3>
+          <h3>Translator Tool</h3>
 
           <p>
-            Translate everyday text between popular languages
-            from one simple page.
+            Translate everyday text between popular languages from one simple page.
           </p>
 
-          <a
-            href="translator.html"
-            class="btn btn-blue"
-          >
+          <a href="translator.html" class="btn btn-blue">
             Try Now
           </a>
 
         </article>
-
 
         <article class="feature-card card">
 
@@ -466,24 +804,17 @@
             loading="lazy"
           >
 
-          <h3>
-            Cultural Places Map
-          </h3>
+          <h3>Cultural Places Map</h3>
 
           <p>
-            Search Buffalo for restaurants and cultural places
-            by broad world region.
+            Search Buffalo for restaurants and cultural places by broad world region.
           </p>
 
-          <a
-            href="map.html"
-            class="btn btn-blue"
-          >
+          <a href="map.html" class="btn btn-blue">
             Try Now
           </a>
 
         </article>
-
 
         <article class="feature-card card">
 
@@ -493,24 +824,17 @@
             loading="lazy"
           >
 
-          <h3>
-            Region Matcher
-          </h3>
+          <h3>Region Matcher</h3>
 
           <p>
-            Create a listing and find other participating students
-            from the same country.
+            Create a listing and find other participating students from the same country.
           </p>
 
-          <a
-            href="region.html"
-            class="btn btn-blue"
-          >
+          <a href="region.html" class="btn btn-blue">
             Try Now
           </a>
 
         </article>
-
 
         <article class="feature-card card">
 
@@ -520,19 +844,13 @@
             loading="lazy"
           >
 
-          <h3>
-            Campus Mood Tracker
-          </h3>
+          <h3>Campus Mood Tracker</h3>
 
           <p>
-            Share one mood each day and see the aggregate mood
-            from current UBverse participants.
+            Share one mood each day and see the aggregate mood from current UBverse participants.
           </p>
 
-          <a
-            href="mood.html"
-            class="btn btn-blue"
-          >
+          <a href="mood.html" class="btn btn-blue">
             Try Now
           </a>
 
@@ -542,42 +860,27 @@
 
     </section>
 
-
-    <!-- =========================
-         DISCLAIMER
-         ========================= -->
-
     <p class="disclaimer reveal">
-      UBverse is a student project and is not an official
-      University at Buffalo website or service.
+      UBverse is a student project and is not an official University at Buffalo website or service.
     </p>
 
   </main>
 
-
   <footer>
     © 2026 UBverse
   </footer>
-
 
   <script>
     const revealElements = document.querySelectorAll(".reveal");
 
     const observer = new IntersectionObserver(
       entries => {
-
         entries.forEach(entry => {
-
           if (entry.isIntersecting) {
-
             entry.target.classList.add("show");
-
             observer.unobserve(entry.target);
-
           }
-
         });
-
       },
       {
         threshold: 0.15
@@ -585,9 +888,7 @@
     );
 
     revealElements.forEach(element => {
-
       observer.observe(element);
-
     });
   </script>
 

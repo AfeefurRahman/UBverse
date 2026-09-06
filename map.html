@@ -24,35 +24,234 @@
   >
 
   <link rel="stylesheet" href="styles.css">
+
+  <style>
+    @keyframes fadeDown {
+      from {
+        opacity: 0;
+        transform: translateY(-18px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(28px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes mapReveal {
+      from {
+        opacity: 0;
+        transform: scale(0.97) translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    @keyframes softGlow {
+      0%,
+      100% {
+        box-shadow: 0 0 0 rgba(36, 104, 229, 0);
+      }
+
+      50% {
+        box-shadow: 0 0 24px rgba(36, 104, 229, 0.25);
+      }
+    }
+
+    .topnav {
+      animation: fadeDown 0.65s ease both;
+    }
+
+    .page-header h1 {
+      animation: fadeUp 0.7s ease 0.1s both;
+    }
+
+    .page-header p {
+      animation: fadeUp 0.7s ease 0.2s both;
+    }
+
+    .region-buttons {
+      animation: fadeUp 0.75s ease 0.3s both;
+    }
+
+    .region-buttons button {
+      transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+
+    .region-buttons button:hover {
+      transform: translateY(-2px);
+    }
+
+    .region-buttons button.active {
+      animation: softGlow 3s ease-in-out infinite;
+    }
+
+    .map-container {
+      animation: mapReveal 0.9s ease 0.45s both;
+    }
+
+    .map-frame {
+      transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+    }
+
+    .map-container:hover .map-frame {
+      transform: scale(1.003);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
 </head>
+
 <body>
+
   <nav class="topnav" aria-label="Main navigation">
     <div class="topnav-content">
-      <a class="nav-left" href="index.html" style="text-decoration:none" aria-label="UBverse home"><img src="ub.jpg" alt="UBverse logo" class="logo"><span class="logo-text">UBverse</span></a>
+
+      <a
+        class="nav-left"
+        href="index.html"
+        style="text-decoration:none"
+        aria-label="UBverse home"
+      >
+        <img
+          src="ub.jpg"
+          alt="UBverse logo"
+          class="logo"
+        >
+        <span class="logo-text">UBverse</span>
+      </a>
+
       <div class="nav-right">
-        <a href="index.html">Home</a><a href="translator.html">Translator</a><a class="active" aria-current="page" href="map.html">Map</a><a href="region.html">Region Matcher</a><a href="mood.html">Mood Tracker</a>
+        <a href="index.html">Home</a>
+        <a href="translator.html">Translator</a>
+        <a
+          class="active"
+          aria-current="page"
+          href="map.html"
+        >
+          Map
+        </a>
+        <a href="region.html">Region Matcher</a>
+        <a href="mood.html">Mood Tracker</a>
       </div>
+
     </div>
   </nav>
 
   <main>
+
     <div class="page-shell">
+
       <header class="page-header">
-        <h1>Cultural Food & Places Map</h1>
-        <p>Explore restaurants and cultural places around Buffalo by broad region.</p>
-        <div class="region-buttons" role="group" aria-label="Map region filters">
-          <button class="active" type="button" data-region="All" aria-pressed="true">All Regions</button>
-          <button type="button" data-region="East Asian" aria-pressed="false">East Asian</button>
-          <button type="button" data-region="South Asian" aria-pressed="false">South Asian</button>
-          <button type="button" data-region="Central Asian" aria-pressed="false">Central Asian</button>
-          <button type="button" data-region="Middle Eastern" aria-pressed="false">Middle Eastern</button>
-          <button type="button" data-region="Latin American" aria-pressed="false">Latin American</button>
-          <button type="button" data-region="African" aria-pressed="false">African</button>
+
+        <h1>
+          Cultural Food & Places Map
+        </h1>
+
+        <p>
+          Explore restaurants and cultural places around Buffalo by broad region.
+        </p>
+
+        <div
+          class="region-buttons"
+          role="group"
+          aria-label="Map region filters"
+        >
+
+          <button
+            class="active"
+            type="button"
+            data-region="All"
+            aria-pressed="true"
+          >
+            All Regions
+          </button>
+
+          <button
+            type="button"
+            data-region="East Asian"
+            aria-pressed="false"
+          >
+            East Asian
+          </button>
+
+          <button
+            type="button"
+            data-region="South Asian"
+            aria-pressed="false"
+          >
+            South Asian
+          </button>
+
+          <button
+            type="button"
+            data-region="Central Asian"
+            aria-pressed="false"
+          >
+            Central Asian
+          </button>
+
+          <button
+            type="button"
+            data-region="Middle Eastern"
+            aria-pressed="false"
+          >
+            Middle Eastern
+          </button>
+
+          <button
+            type="button"
+            data-region="Latin American"
+            aria-pressed="false"
+          >
+            Latin American
+          </button>
+
+          <button
+            type="button"
+            data-region="African"
+            aria-pressed="false"
+          >
+            African
+          </button>
+
         </div>
+
       </header>
+
     </div>
 
     <div class="map-container">
+
       <iframe
         id="map"
         class="map-frame"
@@ -62,4 +261,55 @@
         referrerpolicy="no-referrer-when-downgrade"
         allowfullscreen>
       </iframe>
+
     </div>
+
+  </main>
+
+  <script>
+    const buttons = document.querySelectorAll(".region-buttons button");
+    const map = document.getElementById("map");
+
+    const regionQueries = {
+      "All": "Buffalo NY cultural restaurants",
+      "East Asian": "Buffalo NY East Asian restaurants",
+      "South Asian": "Buffalo NY South Asian restaurants",
+      "Central Asian": "Buffalo NY Central Asian restaurants",
+      "Middle Eastern": "Buffalo NY Middle Eastern restaurants",
+      "Latin American": "Buffalo NY Latin American restaurants",
+      "African": "Buffalo NY African restaurants"
+    };
+
+    buttons.forEach(button => {
+      button.addEventListener("click", () => {
+
+        buttons.forEach(item => {
+          item.classList.remove("active");
+          item.setAttribute("aria-pressed", "false");
+        });
+
+        button.classList.add("active");
+        button.setAttribute("aria-pressed", "true");
+
+        const region = button.dataset.region;
+        const query = regionQueries[region];
+
+        map.style.opacity = "0";
+        map.style.transform = "scale(0.985)";
+
+        setTimeout(() => {
+          map.src =
+            "https://www.google.com/maps?q=" +
+            encodeURIComponent(query) +
+            "&output=embed";
+
+          map.style.opacity = "1";
+          map.style.transform = "scale(1)";
+        }, 180);
+
+      });
+    });
+  </script>
+
+</body>
+</html>

@@ -248,6 +248,144 @@
       line-height: 1.55;
     }
 
+
+    /* ===============================
+       ANIMATIONS
+    ================================ */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes cardRise {
+      from { opacity: 0; transform: translateY(22px) scale(.985); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes fieldPop {
+      from { opacity: 0; transform: translateY(10px) scale(.985); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes statusFade {
+      from { opacity: 0; transform: translateY(5px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes successPulse {
+      0%   { box-shadow: 0 0 0 0 rgba(34,197,94,.35); }
+      70%  { box-shadow: 0 0 0 10px rgba(34,197,94,0); }
+      100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+    }
+
+    @keyframes resultIn {
+      from { opacity: 0; transform: translateY(10px) scale(.985); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .region-header {
+      animation: fadeUp .55s ease both;
+    }
+
+    .region-card {
+      animation: cardRise .62s .08s ease both;
+      transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+    }
+
+    .region-card:hover {
+      transform: translateY(-3px);
+      border-color: #46506a;
+      box-shadow: 0 16px 38px rgba(0,0,0,.18);
+    }
+
+    .region-card .field {
+      animation: fieldPop .45s ease both;
+    }
+
+    .region-card .field:nth-of-type(1) { animation-delay: .16s; }
+    .region-card .field:nth-of-type(2) { animation-delay: .22s; }
+    .region-card .field:nth-of-type(3) { animation-delay: .28s; }
+    .region-card .field:nth-of-type(4) { animation-delay: .34s; }
+
+    .check-row {
+      animation: fieldPop .45s .38s ease both;
+    }
+
+    .primary-btn {
+      transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
+      animation: fadeUp .45s .44s ease both;
+    }
+
+    .primary-btn:hover {
+      box-shadow: 0 10px 24px rgba(37,99,235,.25);
+    }
+
+    .search-row,
+    #searchStatus,
+    .results {
+      animation: fadeUp .45s .18s ease both;
+    }
+
+    .search-btn {
+      transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
+    }
+
+    .search-btn:hover {
+      background: #1d4ed8;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(37,99,235,.24);
+    }
+
+    .region-card input[type="text"],
+    .region-card input[type="email"],
+    .region-card input[type="tel"] {
+      transition:
+        border-color .2s ease,
+        box-shadow .2s ease,
+        transform .2s ease,
+        background .2s ease;
+    }
+
+    .region-card input[type="text"]:focus,
+    .region-card input[type="email"]:focus,
+    .region-card input[type="tel"]:focus {
+      transform: translateY(-1px);
+    }
+
+    .status:not(:empty) {
+      animation: statusFade .3s ease both;
+    }
+
+    .status.success {
+      animation: statusFade .3s ease both, successPulse .7s ease;
+    }
+
+    .student-card {
+      animation: resultIn .42s ease both;
+      transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+    }
+
+    .student-card:hover {
+      transform: translateY(-3px);
+      border-color: #4a5674;
+      box-shadow: 0 10px 24px rgba(0,0,0,.16);
+    }
+
+    .region-note {
+      animation: fadeUp .55s .28s ease both;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
     @media (max-width: 700px) {
       .region-page {
         padding-top: 28px;

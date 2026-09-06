@@ -160,7 +160,8 @@ textarea { min-height: 130px; resize: vertical; }
 .hero h1 { margin: 0 0 14px; font-size: clamp(2.3rem, 6vw, 4rem); line-height: 1.05; }
 .hero p { width: min(820px, 100%); margin: 0 auto 30px; color: #e7edf9; font-size: clamp(1rem, 2.5vw, 1.2rem); }
 .hero-buttons { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 40px; }
-.features { display: grid; grid-template-columns: repeat(5, minmax(140px, 1fr)); gap: 16px; }
+.features-wrapper { display: flex; justify-content: center; }
+.features { display: grid; grid-template-columns: repeat(5, minmax(140px, 1fr)); gap: 16px; max-width: fit-content; }
 .feature-link { text-decoration: none; }
 .feature-btn {
   height: 150px;

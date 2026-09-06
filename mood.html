@@ -139,10 +139,6 @@
       color: #86efac;
     }
 
-    #vote-status.error {
-      color: #fca5a5;
-    }
-
     .results-card h3 {
       margin: 0 0 6px;
       color: #f8fafc;
@@ -318,7 +314,7 @@
   <div class="topnav">
     <div class="topnav-content">
       <div class="nav-left">
-        <img src="favicon.png" alt="UBverse logo" class="logo">
+        <img src="ub.jpg" alt="UB Logo" class="logo">
         <span class="logo-text">UBverse</span>
       </div>
 
@@ -335,7 +331,7 @@
   <main class="mood-page">
     <header class="mood-page-header">
       <h1>❤️ Campus Mood Tracker</h1>
-      <p>Share how you feel today and see the shared UBverse campus mood.</p>
+      <p>Share how you feel today and see the UBverse campus mood.</p>
     </header>
 
     <section class="mood-card mood-choice-card">
@@ -373,7 +369,7 @@
 
     <section class="mood-card results-card" aria-live="polite">
       <h3>Campus Mood Today</h3>
-      <p>Overall shared moods submitted today:</p>
+      <p>Campus mood results:</p>
 
       <div class="result-row">
         <div class="result-label">Amazing</div>
@@ -406,33 +402,62 @@
       </div>
 
       <div id="results-message" class="results-message">
-        No mood votes have been submitted yet.
+        No mood votes have been saved yet.
       </div>
     </section>
 
     <p class="mood-note">
-      Mood totals are shared across UBverse users. This browser only remembers whether you already voted today.
+      UBverse will use shared campus results when the server is available. If the server is unavailable, your vote is saved in this browser so the page still works.
     </p>
   </main>
 
   <script>
     (() => {
+      /*
+        IMPORTANT:
+        Replace this with your REAL Render web-service URL
+        if your Render service uses a different address.
+      */
       const API_BASE = 'https://ubverse-api.onrender.com';
 
-      /*
-        Use NEW keys for the shared version.
-        This prevents an old browser-only vote from incorrectly appearing
-        as a successful shared vote.
-      */
-      const VOTE_DATE_KEY = 'ubverseSharedMoodVoteDate';
-      const SELECTED_MOOD_KEY = 'ubverseSharedMoodSelectedToday';
+      const LOCAL_COUNTS_KEY = 'ubverseCampusMoodFallback';
+      const VOTE_DATE_KEY = 'ubverseMoodVoteDate';
+      const SELECTED_MOOD_KEY = 'ubverseMoodSelectedToday';
+
+      const defaults = {
+        Amazing: 0,
+        Good: 0,
+        Okay: 0,
+        'Not Great': 0,
+        Tough: 0
+      };
 
       const config = {
-        Amazing: { bar: 'amazing-bar', percent: 'amazing-percent', color: '#22c55e' },
-        Good: { bar: 'good-bar', percent: 'good-percent', color: '#38bdf8' },
-        Okay: { bar: 'okay-bar', percent: 'okay-percent', color: '#eab308' },
-        'Not Great': { bar: 'notgreat-bar', percent: 'notgreat-percent', color: '#f97316' },
-        Tough: { bar: 'tough-bar', percent: 'tough-percent', color: '#ef4444' }
+        Amazing: {
+          bar: 'amazing-bar',
+          percent: 'amazing-percent',
+          color: '#22c55e'
+        },
+        Good: {
+          bar: 'good-bar',
+          percent: 'good-percent',
+          color: '#38bdf8'
+        },
+        Okay: {
+          bar: 'okay-bar',
+          percent: 'okay-percent',
+          color: '#eab308'
+        },
+        'Not Great': {
+          bar: 'notgreat-bar',
+          percent: 'notgreat-percent',
+          color: '#f97316'
+        },
+        Tough: {
+          bar: 'tough-bar',
+          percent: 'tough-percent',
+          color: '#ef4444'
+        }
       };
 
       const comments = {
@@ -447,6 +472,9 @@
       const status = document.getElementById('vote-status');
       const resultsMessage = document.getElementById('results-message');
 
+      let sharedMode = false;
+      let currentCounts = { ...defaults };
+
       function todayKey() {
         const now = new Date();
         const year = now.getFullYear();
@@ -455,65 +483,56 @@
         return `${year}-${month}-${day}`;
       }
 
-      function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-      }
+      function getLocalCounts() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(LOCAL_COUNTS_KEY));
 
-      async function fetchWithRetry(url, options = {}, attempts = 3) {
-        let lastError;
-
-        for (let attempt = 1; attempt <= attempts; attempt++) {
-          try {
-            const controller = new AbortController();
-            const timeout = setTimeout(() => controller.abort(), 15000);
-
-            const response = await fetch(url, {
-              ...options,
-              signal: controller.signal
-            });
-
-            clearTimeout(timeout);
-
-            /*
-              A sleeping Render service may need a little time to wake up.
-              Retry server errors, but not normal 4xx validation errors.
-            */
-            if (response.status >= 500 && attempt < attempts) {
-              await sleep(1500 * attempt);
-              continue;
-            }
-
-            return response;
-          } catch (error) {
-            lastError = error;
-
-            if (attempt < attempts) {
-              await sleep(1500 * attempt);
-              continue;
-            }
+          if (!saved || typeof saved !== 'object') {
+            return { ...defaults };
           }
-        }
 
-        throw lastError || new Error('Could not reach the UBverse server.');
+          return {
+            Amazing: Number(saved.Amazing) || 0,
+            Good: Number(saved.Good) || 0,
+            Okay: Number(saved.Okay) || 0,
+            'Not Great': Number(saved['Not Great']) || 0,
+            Tough: Number(saved.Tough) || 0
+          };
+        } catch {
+          return { ...defaults };
+        }
       }
 
-      function renderResults(counts = {}) {
-        const normalized = {
+      function saveLocalCounts(counts) {
+        try {
+          localStorage.setItem(
+            LOCAL_COUNTS_KEY,
+            JSON.stringify(counts)
+          );
+        } catch {}
+      }
+
+      function normalizeCounts(counts = {}) {
+        return {
           Amazing: Number(counts.Amazing) || 0,
           Good: Number(counts.Good) || 0,
           Okay: Number(counts.Okay) || 0,
           'Not Great': Number(counts['Not Great']) || 0,
           Tough: Number(counts.Tough) || 0
         };
+      }
 
-        const total = Object.values(normalized)
+      function renderResults(counts, modeMessage = '') {
+        currentCounts = normalizeCounts(counts);
+
+        const total = Object.values(currentCounts)
           .reduce((sum, value) => sum + value, 0);
 
         Object.entries(config).forEach(([mood, item]) => {
           const percent =
             total === 0
               ? 0
-              : Math.round((normalized[mood] / total) * 100);
+              : Math.round((currentCounts[mood] / total) * 100);
 
           const bar = document.getElementById(item.bar);
           const percentText = document.getElementById(item.percent);
@@ -525,16 +544,19 @@
 
         if (total === 0) {
           resultsMessage.textContent =
-            'No shared mood votes have been submitted today yet.';
+            modeMessage || 'No mood votes have been submitted yet.';
           return;
         }
 
-        const topMood = Object.keys(normalized).reduce((best, mood) =>
-          normalized[mood] > normalized[best] ? mood : best
+        const topMood = Object.keys(currentCounts).reduce(
+          (best, mood) =>
+            currentCounts[mood] > currentCounts[best]
+              ? mood
+              : best
         );
 
         resultsMessage.textContent =
-          `${comments[topMood]} Total shared votes today: ${total}.`;
+          `${comments[topMood]} Total votes: ${total}. ${modeMessage}`.trim();
       }
 
       function getVoteState() {
@@ -542,15 +564,24 @@
           const votedToday =
             localStorage.getItem(VOTE_DATE_KEY) === todayKey();
 
-          const selectedMood =
-            votedToday
-              ? localStorage.getItem(SELECTED_MOOD_KEY)
-              : null;
+          const selectedMood = votedToday
+            ? localStorage.getItem(SELECTED_MOOD_KEY)
+            : null;
 
           return { votedToday, selectedMood };
         } catch {
-          return { votedToday: false, selectedMood: null };
+          return {
+            votedToday: false,
+            selectedMood: null
+          };
         }
+      }
+
+      function saveVoteState(mood) {
+        try {
+          localStorage.setItem(VOTE_DATE_KEY, todayKey());
+          localStorage.setItem(SELECTED_MOOD_KEY, mood);
+        } catch {}
       }
 
       function renderVoteState() {
@@ -558,84 +589,88 @@
 
         buttons.forEach(button => {
           button.disabled = votedToday;
+
           button.classList.toggle(
             'selected',
-            votedToday && button.dataset.mood === selectedMood
+            votedToday &&
+            button.dataset.mood === selectedMood
           );
         });
 
         if (votedToday) {
           status.className = 'success';
           status.textContent =
-            `Today's shared mood was saved${selectedMood ? `: ${selectedMood}` : ''}. You can vote again tomorrow.`;
+            `Today's mood saved${selectedMood ? `: ${selectedMood}` : ''}. You can vote again tomorrow.`;
         } else {
           status.className = '';
-          status.textContent = 'Choose one mood for today.';
+          status.textContent = sharedMode
+            ? 'Choose one mood for today. Shared campus results are connected.'
+            : 'Choose one mood for today.';
         }
       }
 
-      async function loadResults() {
-        resultsMessage.textContent =
-          'Connecting to the shared UBverse mood board...';
+      async function tryLoadSharedResults() {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 8000);
 
         try {
-          const response = await fetchWithRetry(
+          const response = await fetch(
             `${API_BASE}/api/moods`,
-            {},
-            3
+            { signal: controller.signal }
           );
 
           const data = await response.json().catch(() => ({}));
 
-          if (!response.ok) {
+          if (!response.ok || !data.counts) {
             throw new Error(
               data.error ||
-              `Mood results request failed (${response.status}).`
+              `Shared results request failed (${response.status}).`
             );
           }
 
-          renderResults(data.counts || {});
+          sharedMode = true;
+
+          renderResults(
+            data.counts,
+            'Shared campus results.'
+          );
+
+          renderVoteState();
+
+          return true;
         } catch (error) {
-          console.error('Shared mood load error:', error);
+          console.warn('Shared mood server unavailable:', error);
 
-          renderResults({});
+          sharedMode = false;
 
-          resultsMessage.textContent =
-            'Shared mood server is currently unavailable. Check the Render backend and DATABASE_URL.';
+          const localCounts = getLocalCounts();
+
+          renderResults(
+            localCounts,
+            'Shared server unavailable — showing results saved in this browser.'
+          );
+
+          renderVoteState();
+
+          return false;
+        } finally {
+          clearTimeout(timeout);
         }
       }
 
-      async function submitMood(mood) {
-        const { votedToday } = getVoteState();
-
-        if (votedToday) {
-          renderVoteState();
-          return;
-        }
-
-        if (!Object.prototype.hasOwnProperty.call(config, mood)) {
-          return;
-        }
-
-        buttons.forEach(button => {
-          button.disabled = true;
-        });
-
-        status.className = '';
-        status.textContent = 'Saving your mood to the shared board...';
+      async function submitSharedMood(mood) {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 8000);
 
         try {
-          const response = await fetchWithRetry(
-            `${API_BASE}/api/mood`,
-            {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ mood })
+          const response = await fetch(`${API_BASE}/api/mood`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
             },
-            3
-          );
+            body: JSON.stringify({ mood }),
+            signal: controller.signal
+          });
 
           const data = await response.json().catch(() => ({}));
 
@@ -646,44 +681,76 @@
             );
           }
 
-          /*
-            Only remember the vote locally AFTER the server confirms
-            that the shared vote was saved.
-          */
-          try {
-            localStorage.setItem(VOTE_DATE_KEY, todayKey());
-            localStorage.setItem(SELECTED_MOOD_KEY, mood);
-          } catch {}
+          sharedMode = true;
+          saveVoteState(mood);
 
           if (data.counts) {
-            renderResults(data.counts);
+            renderResults(
+              data.counts,
+              'Shared campus results.'
+            );
           } else {
-            await loadResults();
+            await tryLoadSharedResults();
           }
 
           renderVoteState();
+
+          return true;
         } catch (error) {
-          console.error('Shared mood submit error:', error);
-
-          status.className = 'error';
-          status.textContent =
-            'Could not save your mood to the shared server. Please try again.';
-
-          buttons.forEach(button => {
-            button.disabled = false;
-            button.classList.remove('selected');
-          });
+          console.warn('Shared mood submission failed:', error);
+          return false;
+        } finally {
+          clearTimeout(timeout);
         }
       }
 
+      function submitLocalFallback(mood) {
+        const counts = getLocalCounts();
+        counts[mood] += 1;
+
+        saveLocalCounts(counts);
+        saveVoteState(mood);
+
+        renderResults(
+          counts,
+          'Shared server unavailable — this vote was saved in this browser only.'
+        );
+
+        renderVoteState();
+      }
+
       buttons.forEach(button => {
-        button.addEventListener('click', () => {
-          submitMood(button.dataset.mood);
+        button.addEventListener('click', async () => {
+          const { votedToday } = getVoteState();
+
+          if (votedToday) {
+            renderVoteState();
+            return;
+          }
+
+          const mood = button.dataset.mood;
+
+          if (!Object.prototype.hasOwnProperty.call(config, mood)) {
+            return;
+          }
+
+          buttons.forEach(item => {
+            item.disabled = true;
+          });
+
+          status.className = '';
+          status.textContent = 'Submitting mood...';
+
+          const sharedSaved = await submitSharedMood(mood);
+
+          if (!sharedSaved) {
+            submitLocalFallback(mood);
+          }
         });
       });
 
       renderVoteState();
-      loadResults();
+      tryLoadSharedResults();
     })();
   </script>
 </body>

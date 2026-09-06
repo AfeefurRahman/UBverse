@@ -1,157 +1,551 @@
-<script>
-  const STORAGE_KEY = 'ubverseStudents';
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  const regForm = document.getElementById('regForm');
-  const registerBtn = document.getElementById('registerBtn');
-  const registerStatus = document.getElementById('registerStatus');
+  <meta
+    name="description"
+    content="Use UBverse Region Matcher to save a local student listing and find students from the same country or region."
+  >
 
-  const searchBtn = document.getElementById('searchBtn');
-  const searchCountry = document.getElementById('searchCountry');
-  const searchStatus = document.getElementById('searchStatus');
-  const results = document.getElementById('results');
+  <title>Region Matcher | UBverse</title>
 
-  function setStatus(element, message, type = '') {
-    element.className = `status${type ? ` ${type}` : ''}`;
-    element.textContent = message;
-  }
+  <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/favicon.png">
+  <meta name="theme-color" content="#005bbb">
 
-  function getStudents() {
-    try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-    } catch {
-      return [];
-    }
-  }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap"
+    rel="stylesheet"
+  >
 
-  function saveStudents(students) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(students));
-  }
+  <link rel="stylesheet" href="styles.css">
 
-  // REGISTER
-  regForm.addEventListener('submit', (event) => {
-    event.preventDefault();
-
-    const name = document.getElementById('name').value.trim();
-    const country = document.getElementById('country').value.trim();
-    const ubit = document.getElementById('ubit').value.trim().toLowerCase();
-    const phone = document.getElementById('phone').value.trim();
-    const sharePhone = document.getElementById('sharePhone').checked;
-    const consent = document.getElementById('consent').checked;
-
-    if (!name || !country || !ubit) {
-      setStatus(registerStatus, 'Please complete all required fields.', 'error');
-      return;
+  <style>
+    .region-page {
+      width: min(840px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 38px 0 44px;
     }
 
-    if (!ubit.endsWith('@buffalo.edu')) {
-      setStatus(
-        registerStatus,
-        'Please use a valid @buffalo.edu email address.',
-        'error'
-      );
-      return;
+    .region-header {
+      text-align: center;
+      margin-bottom: 30px;
     }
 
-    if (!consent) {
-      setStatus(registerStatus, 'You must agree before registering.', 'error');
-      return;
+    .region-header h1 {
+      margin: 0 0 8px;
+      color: #f8fafc;
+      font-size: clamp(2rem, 4vw, 2.55rem);
+      line-height: 1.1;
+      font-weight: 800;
+      letter-spacing: -0.03em;
     }
 
-    const students = getStudents();
-
-    const existingIndex = students.findIndex(
-      student => student.ubit === ubit
-    );
-
-    const student = {
-      name,
-      country,
-      ubit,
-      phone,
-      sharePhone
-    };
-
-    if (existingIndex >= 0) {
-      students[existingIndex] = student;
-    } else {
-      students.push(student);
+    .region-header p {
+      margin: 0;
+      color: #c4cde0;
+      font-size: 1rem;
+      line-height: 1.55;
     }
 
-    saveStudents(students);
-
-    setStatus(
-      registerStatus,
-      'Registration saved successfully!',
-      'success'
-    );
-
-    searchCountry.value = country;
-    regForm.reset();
-  });
-
-  // SEARCH
-  function searchStudents() {
-    const country = searchCountry.value.trim().toLowerCase();
-
-    results.replaceChildren();
-
-    if (!country) {
-      setStatus(searchStatus, 'Enter a country to search.', 'error');
-      return;
+    .region-card {
+      background: #232634;
+      border: 1px solid #383d50;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.12);
+      padding: 28px;
+      margin-bottom: 22px;
     }
 
-    const students = getStudents();
-
-    const found = students.filter(
-      student => student.country.toLowerCase() === country
-    );
-
-    if (found.length === 0) {
-      setStatus(
-        searchStatus,
-        'No students found from that country yet.'
-      );
-      return;
+    .region-card h2 {
+      margin: 0 0 22px;
+      color: #f8fafc;
+      font-size: 1.45rem;
+      font-weight: 800;
     }
 
-    setStatus(
-      searchStatus,
-      `${found.length} student${found.length === 1 ? '' : 's'} found.`,
-      'success'
-    );
+    .field {
+      margin-bottom: 18px;
+    }
 
-    found.forEach(student => {
-      const card = document.createElement('div');
-      card.className = 'student';
+    .field label,
+    .field-label {
+      display: block;
+      margin-bottom: 8px;
+      color: #f3f6fb;
+      font-size: .98rem;
+      font-weight: 800;
+    }
 
-      const name = document.createElement('strong');
-      name.textContent = student.name;
+    .field small {
+      display: block;
+      margin-top: -2px;
+      color: #aebad1;
+      font-size: .84rem;
+      line-height: 1.4;
+    }
 
-      const countryLine = document.createElement('div');
-      countryLine.textContent = student.country;
+    .region-card input[type="text"],
+    .region-card input[type="email"],
+    .region-card input[type="tel"] {
+      width: 100%;
+      margin: 0 0 7px;
+      padding: 14px 16px;
+      border: 1px solid #3d455d;
+      border-radius: 11px;
+      background: #eef4ff;
+      color: #111827;
+      font: inherit;
+      outline: none;
+    }
 
-      const email = document.createElement('a');
-      email.href = `mailto:${student.ubit}`;
-      email.textContent = student.ubit;
+    .region-card input:focus {
+      border-color: #4f8fff;
+      box-shadow: 0 0 0 3px rgba(79,143,255,.15);
+    }
 
-      card.append(name, countryLine, email);
+    .check-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 15px 0;
+      color: #f3f6fb;
+      line-height: 1.45;
+    }
 
-      if (student.sharePhone && student.phone) {
-        const phone = document.createElement('div');
-        phone.textContent = `Phone: ${student.phone}`;
-        card.append(phone);
+    .check-row input {
+      margin-top: 3px;
+      flex: 0 0 auto;
+    }
+
+    .primary-btn {
+      width: 100%;
+      border: 0;
+      border-radius: 11px;
+      padding: 14px 18px;
+      background: #2563eb;
+      color: #fff;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background .15s ease, transform .15s ease;
+    }
+
+    .primary-btn:hover {
+      background: #1d4ed8;
+      transform: translateY(-1px);
+    }
+
+    .status {
+      min-height: 23px;
+      margin: 14px 0 0;
+      color: #c2cde1;
+      font-size: .9rem;
+      line-height: 1.45;
+    }
+
+    .status.success {
+      color: #86efac;
+    }
+
+    .status.error {
+      color: #fca5a5;
+    }
+
+    .divider {
+      height: 1px;
+      margin: 28px 0;
+      background: #3a4052;
+      border: 0;
+    }
+
+    .search-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .search-row .field {
+      margin: 0;
+    }
+
+    .search-btn {
+      border: 0;
+      border-radius: 11px;
+      padding: 14px 20px;
+      background: #2563eb;
+      color: #fff;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      min-height: 50px;
+    }
+
+    .results {
+      margin-top: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .student-card {
+      padding: 16px;
+      border: 1px solid #3b4256;
+      border-radius: 12px;
+      background: #1b1e2a;
+      color: #e9eef8;
+      line-height: 1.55;
+    }
+
+    .student-card strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #fff;
+      font-size: 1.05rem;
+    }
+
+    .student-card a {
+      color: #7fb0ff;
+      text-decoration: none;
+    }
+
+    .student-card a:hover {
+      text-decoration: underline;
+    }
+
+    .region-note {
+      margin-top: 34px;
+      text-align: center;
+      color: #9daac5;
+      font-size: .84rem;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 700px) {
+      .region-page {
+        padding-top: 28px;
       }
 
-      results.appendChild(card);
-    });
-  }
+      .region-card {
+        padding: 22px 18px;
+      }
 
-  searchBtn.addEventListener('click', searchStudents);
+      .search-row {
+        grid-template-columns: 1fr;
+      }
 
-  searchCountry.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      searchStudents();
+      .search-btn {
+        width: 100%;
+      }
     }
-  });
-</script>
+  </style>
+</head>
+
+<body>
+  <div class="topnav">
+    <div class="topnav-content">
+      <a class="nav-left" href="index.html" style="text-decoration:none" aria-label="UBverse home">
+        <img src="ub.jpg" alt="UBverse logo" class="logo">
+        <span class="logo-text">UBverse</span>
+      </a>
+
+      <div class="nav-right">
+        <a href="index.html">Home</a>
+        <a href="translator.html">Translator</a>
+        <a href="map.html">Map</a>
+        <a class="active" aria-current="page" href="region.html">Region Matcher</a>
+        <a href="mood.html">Mood Tracker</a>
+      </div>
+    </div>
+  </div>
+
+  <main class="region-page">
+    <header class="region-header">
+      <h1>🌎 Region Matcher</h1>
+      <p>Save a student listing and find other saved listings by country.</p>
+    </header>
+
+    <section class="region-card">
+      <h2>Register / Update Listing</h2>
+
+      <form id="regForm" novalidate>
+        <div class="field">
+          <label for="name">Name</label>
+          <input
+            type="text"
+            id="name"
+            maxlength="80"
+            autocomplete="name"
+            placeholder="Your name"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label for="country">Country</label>
+          <input
+            type="text"
+            id="country"
+            maxlength="80"
+            autocomplete="country-name"
+            placeholder="e.g. Bangladesh"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label for="ubit">UBIT Email</label>
+          <input
+            type="email"
+            id="ubit"
+            maxlength="120"
+            autocomplete="email"
+            placeholder="yourname@buffalo.edu"
+            required
+          >
+          <small>A @buffalo.edu address is required.</small>
+        </div>
+
+        <div class="field">
+          <label for="phone">Phone Number <span style="font-weight:400;color:#aebad1">(optional)</span></label>
+          <input
+            type="tel"
+            id="phone"
+            maxlength="30"
+            autocomplete="tel"
+            placeholder="Optional phone number"
+          >
+        </div>
+
+        <label class="check-row">
+          <input type="checkbox" id="sharePhone">
+          <span>Show my phone number in search results.</span>
+        </label>
+
+        <label class="check-row">
+          <input type="checkbox" id="consent" required>
+          <span>I agree to list my name and UBIT email for other UBverse users searching my country.</span>
+        </label>
+
+        <button class="primary-btn" id="registerBtn" type="submit">
+          Register / Update Listing
+        </button>
+
+        <p id="registerStatus" class="status" aria-live="polite"></p>
+      </form>
+
+      <hr class="divider">
+
+      <h2>Find Students</h2>
+
+      <div class="search-row">
+        <div class="field">
+          <label for="searchCountry">Search by country</label>
+          <input
+            type="text"
+            id="searchCountry"
+            maxlength="80"
+            placeholder="e.g. Bangladesh"
+          >
+        </div>
+
+        <button id="searchBtn" class="search-btn" type="button">Search</button>
+      </div>
+
+      <p id="searchStatus" class="status" aria-live="polite"></p>
+      <div id="results" class="results"></div>
+    </section>
+
+    <p class="region-note">
+      This GitHub Pages version stores listings only in this browser.
+      Listings are not shared between different devices or users until a database/backend is connected.
+    </p>
+  </main>
+
+  <script>
+    (() => {
+      const STORAGE_KEY = 'ubverseStudents';
+
+      const regForm = document.getElementById('regForm');
+      const registerStatus = document.getElementById('registerStatus');
+      const searchBtn = document.getElementById('searchBtn');
+      const searchCountry = document.getElementById('searchCountry');
+      const searchStatus = document.getElementById('searchStatus');
+      const results = document.getElementById('results');
+
+      function setStatus(element, message, type = '') {
+        element.className = `status${type ? ` ${type}` : ''}`;
+        element.textContent = message;
+      }
+
+      function normalizeCountry(value) {
+        return String(value || '').trim().replace(/\s+/g, ' ').toLowerCase();
+      }
+
+      function getStudents() {
+        try {
+          const value = JSON.parse(localStorage.getItem(STORAGE_KEY));
+          return Array.isArray(value) ? value : [];
+        } catch {
+          return [];
+        }
+      }
+
+      function saveStudents(students) {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(students));
+          return true;
+        } catch {
+          return false;
+        }
+      }
+
+      regForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const name = document.getElementById('name').value.trim();
+        const country = document.getElementById('country').value.trim();
+        const ubit = document.getElementById('ubit').value.trim().toLowerCase();
+        const phone = document.getElementById('phone').value.trim();
+        const sharePhone = document.getElementById('sharePhone').checked;
+        const consent = document.getElementById('consent').checked;
+
+        if (!name || !country || !ubit) {
+          setStatus(registerStatus, 'Please complete all required fields.', 'error');
+          return;
+        }
+
+        if (!ubit.endsWith('@buffalo.edu')) {
+          setStatus(registerStatus, 'Please use a valid @buffalo.edu email address.', 'error');
+          return;
+        }
+
+        if (sharePhone && !phone) {
+          setStatus(
+            registerStatus,
+            'Enter a phone number or uncheck "Show my phone number".',
+            'error'
+          );
+          return;
+        }
+
+        if (!consent) {
+          setStatus(registerStatus, 'You must agree before registering.', 'error');
+          return;
+        }
+
+        const students = getStudents();
+
+        const listing = {
+          name,
+          country,
+          countryKey: normalizeCountry(country),
+          ubit,
+          phone,
+          sharePhone,
+          updatedAt: new Date().toISOString()
+        };
+
+        const existingIndex = students.findIndex(
+          (student) => String(student.ubit || '').toLowerCase() === ubit
+        );
+
+        if (existingIndex >= 0) {
+          students[existingIndex] = listing;
+        } else {
+          students.push(listing);
+        }
+
+        if (!saveStudents(students)) {
+          setStatus(
+            registerStatus,
+            'Your browser blocked local storage, so the listing could not be saved.',
+            'error'
+          );
+          return;
+        }
+
+        setStatus(registerStatus, 'Registration saved successfully!', 'success');
+
+        searchCountry.value = country;
+        regForm.reset();
+      });
+
+      function renderStudents(found) {
+        results.replaceChildren();
+
+        found.forEach((student) => {
+          const card = document.createElement('article');
+          card.className = 'student-card';
+
+          const name = document.createElement('strong');
+          name.textContent = student.name || 'Student';
+
+          const country = document.createElement('div');
+          country.textContent = student.country || '';
+
+          const emailLine = document.createElement('div');
+          const email = document.createElement('a');
+          email.href = `mailto:${student.ubit}`;
+          email.textContent = student.ubit || '';
+          emailLine.append('Email: ', email);
+
+          card.append(name, country, emailLine);
+
+          if (student.sharePhone && student.phone) {
+            const phone = document.createElement('div');
+            phone.textContent = `Phone: ${student.phone}`;
+            card.append(phone);
+          }
+
+          results.append(card);
+        });
+      }
+
+      function searchStudents() {
+        const query = normalizeCountry(searchCountry.value);
+
+        results.replaceChildren();
+
+        if (!query) {
+          setStatus(searchStatus, 'Enter a country to search.', 'error');
+          return;
+        }
+
+        const students = getStudents();
+
+        const found = students.filter((student) => {
+          const key = student.countryKey || normalizeCountry(student.country);
+          return key === query;
+        });
+
+        if (found.length === 0) {
+          setStatus(searchStatus, 'No saved students found from that country.');
+          return;
+        }
+
+        setStatus(
+          searchStatus,
+          `${found.length} student${found.length === 1 ? '' : 's'} found.`,
+          'success'
+        );
+
+        renderStudents(found);
+      }
+
+      searchBtn.addEventListener('click', searchStudents);
+
+      searchCountry.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          searchStudents();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

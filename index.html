@@ -17,99 +17,579 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap"
     rel="stylesheet"
   >
 
   <link rel="stylesheet" href="styles.css">
+
+  <style>
+    /* =========================
+       PAGE ANIMATIONS
+       ========================= */
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(28px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes floatCard {
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+
+    @keyframes softPulse {
+      0%,
+      100% {
+        box-shadow: 0 0 0 rgba(36, 104, 229, 0);
+      }
+
+      50% {
+        box-shadow: 0 0 28px rgba(36, 104, 229, 0.35);
+      }
+    }
+
+    @keyframes backgroundZoom {
+      from {
+        background-size: 100%;
+      }
+
+      to {
+        background-size: 106%;
+      }
+    }
+
+    .topnav {
+      animation: fadeDown 0.7s ease both;
+    }
+
+    .hero {
+      animation: backgroundZoom 12s ease-in-out alternate infinite;
+    }
+
+    .hero h1 {
+      animation: fadeUp 0.8s ease 0.1s both;
+    }
+
+    .hero p {
+      animation: fadeUp 0.8s ease 0.25s both;
+    }
+
+    .hero-buttons {
+      animation: fadeUp 0.8s ease 0.4s both;
+    }
+
+    .features-wrapper {
+      animation: fadeUp 0.9s ease 0.55s both;
+    }
+
+    .feature-link:nth-child(1) .feature-btn {
+      animation: floatCard 4.5s ease-in-out infinite;
+    }
+
+    .feature-link:nth-child(2) .feature-btn {
+      animation: floatCard 4.5s ease-in-out 0.35s infinite;
+    }
+
+    .feature-link:nth-child(3) .feature-btn {
+      animation: floatCard 4.5s ease-in-out 0.7s infinite;
+    }
+
+    .feature-link:nth-child(4) .feature-btn {
+      animation: floatCard 4.5s ease-in-out 1.05s infinite;
+    }
+
+    .btn-blue {
+      animation: softPulse 3.5s ease-in-out infinite;
+    }
+
+    .stats-section,
+    .features-section,
+    .disclaimer {
+      opacity: 0;
+      transform: translateY(30px);
+      transition:
+        opacity 0.8s ease,
+        transform 0.8s ease;
+    }
+
+    .show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .feature-card {
+      transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+      border-color: rgba(80, 140, 255, 0.35);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+
+      .stats-section,
+      .features-section,
+      .disclaimer {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
 </head>
+
 <body>
+
   <nav class="topnav" aria-label="Main navigation">
     <div class="topnav-content">
-      <a class="nav-left" href="index.html" style="text-decoration:none" aria-label="UBverse home">
-        <img src="ub.jpg" alt="UBverse logo" class="logo">
+
+      <a
+        class="nav-left"
+        href="index.html"
+        style="text-decoration: none"
+        aria-label="UBverse home"
+      >
+        <img
+          src="ub.jpg"
+          alt="UBverse logo"
+          class="logo"
+        >
+
         <span class="logo-text">UBverse</span>
       </a>
+
       <div class="nav-right">
-        <a class="active" aria-current="page" href="index.html">Home</a>
-        <a href="translator.html">Translator</a>
-        <a href="map.html">Map</a>
-        <a href="region.html">Region Matcher</a>
-        <a href="mood.html">Mood Tracker</a>
+        <a
+          class="active"
+          aria-current="page"
+          href="index.html"
+        >
+          Home
+        </a>
+
+        <a href="translator.html">
+          Translator
+        </a>
+
+        <a href="map.html">
+          Map
+        </a>
+
+        <a href="region.html">
+          Region Matcher
+        </a>
+
+        <a href="mood.html">
+          Mood Tracker
+        </a>
       </div>
+
     </div>
   </nav>
 
+
   <main>
+
+    <!-- =========================
+         HERO
+         ========================= -->
+
     <section class="hero">
+
       <div class="hero-content">
-        <h1>Welcome to UB International Life</h1>
-        <p>Your campus companion for translation, discovering places, connecting with students from your region, and tracking campus vibes.</p>
+
+        <h1>
+          Welcome to UB International Life
+        </h1>
+
+        <p>
+          Your campus companion for translation, discovering places,
+          connecting with students from your region, and tracking campus vibes.
+        </p>
+
         <div class="hero-buttons">
-          <a href="#features" class="btn btn-blue">Explore Tools</a>
-          <a href="region.html" class="btn btn-transparent">Connect Now</a>
+
+          <a
+            href="#features"
+            class="btn btn-blue"
+          >
+            Explore Tools
+          </a>
+
+          <a
+            href="region.html"
+            class="btn btn-transparent"
+          >
+            Connect Now
+          </a>
+
         </div>
+
+
+        <!-- =========================
+             HERO QUICK TOOLS
+             ========================= -->
 
         <div class="features-wrapper">
-          <div class="features" aria-label="UBverse tools">
-            <a href="translator.html" class="feature-link"><div class="feature-btn"><img src="translate.jpg" alt="" loading="lazy"><span>Translator</span></div></a>
-            <a href="map.html" class="feature-link"><div class="feature-btn"><img src="map-icon.svg" alt="" loading="lazy"><span>City Map</span></div></a>
-            <a href="region.html" class="feature-link"><div class="feature-btn"><img src="region.jpg" alt="" loading="lazy"><span>Find Friends</span></div></a>
-            <a href="mood.html" class="feature-link"><div class="feature-btn"><img src="mood.jpg" alt="" loading="lazy"><span>Mood Tracker</span></div></a>
+
+          <div
+            class="features"
+            aria-label="UBverse tools"
+          >
+
+            <a
+              href="translator.html"
+              class="feature-link"
+            >
+              <div class="feature-btn">
+
+                <img
+                  src="translate.jpg"
+                  alt=""
+                  loading="lazy"
+                >
+
+                <span>
+                  Translator
+                </span>
+
+              </div>
+            </a>
+
+
+            <a
+              href="map.html"
+              class="feature-link"
+            >
+              <div class="feature-btn">
+
+                <img
+                  src="map-icon.svg"
+                  alt=""
+                  loading="lazy"
+                >
+
+                <span>
+                  City Map
+                </span>
+
+              </div>
+            </a>
+
+
+            <a
+              href="region.html"
+              class="feature-link"
+            >
+              <div class="feature-btn">
+
+                <img
+                  src="region.jpg"
+                  alt=""
+                  loading="lazy"
+                >
+
+                <span>
+                  Find Friends
+                </span>
+
+              </div>
+            </a>
+
+
+            <a
+              href="mood.html"
+              class="feature-link"
+            >
+              <div class="feature-btn">
+
+                <img
+                  src="mood.jpg"
+                  alt=""
+                  loading="lazy"
+                >
+
+                <span>
+                  Mood Tracker
+                </span>
+
+              </div>
+            </a>
+
           </div>
+
         </div>
+
       </div>
     </section>
 
-    <section class="stats-section" aria-label="UBverse highlights">
+
+    <!-- =========================
+         STATS
+         ========================= -->
+
+    <section
+      class="stats-section reveal"
+      aria-label="UBverse highlights"
+    >
+
       <div class="stats-center">
-        <div><span class="stats-big">8,000+</span>International Students</div>
-        <div><span class="stats-big">50+</span>Languages Spoken</div>
-        <div><span class="stats-big">4</span>Integrated Student Tools</div>
+
+        <div>
+          <span class="stats-big">
+            8,000+
+          </span>
+
+          International Students
+        </div>
+
+
+        <div>
+          <span class="stats-big">
+            50+
+          </span>
+
+          Languages Spoken
+        </div>
+
+
+        <div>
+          <span class="stats-big">
+            4
+          </span>
+
+          Integrated Student Tools
+        </div>
+
       </div>
+
     </section>
 
-    <section id="features" class="features-section">
+
+    <!-- =========================
+         FEATURE DETAILS
+         ========================= -->
+
+    <section
+      id="features"
+      class="features-section reveal"
+    >
+
       <div class="features-header">
-        <h2>Everything you need to get oriented</h2>
-        <p>Four simple tools designed around common needs of international students at UB.</p>
+
+        <h2>
+          Everything you need to get oriented
+        </h2>
+
+        <p>
+          Four simple tools designed around common needs
+          of international students at UB.
+        </p>
+
       </div>
+
 
       <div class="features-grid">
-        <article class="feature-card card">
-          <img src="translate.jpg" alt="Translator icon" loading="lazy">
-          <h3>Translator Tool</h3>
-          <p>Translate everyday text between popular languages from one simple page.</p>
-          <a href="translator.html" class="btn btn-blue">Try Now</a>
-        </article>
+
 
         <article class="feature-card card">
-          <img src="map-icon.svg" alt="Map icon" loading="lazy">
-          <h3>Cultural Places Map</h3>
-          <p>Search Buffalo for restaurants and cultural places by broad world region.</p>
-          <a href="map.html" class="btn btn-blue">Try Now</a>
+
+          <img
+            src="translate.jpg"
+            alt="Translator icon"
+            loading="lazy"
+          >
+
+          <h3>
+            Translator Tool
+          </h3>
+
+          <p>
+            Translate everyday text between popular languages
+            from one simple page.
+          </p>
+
+          <a
+            href="translator.html"
+            class="btn btn-blue"
+          >
+            Try Now
+          </a>
+
         </article>
 
-        <article class="feature-card card">
-          <img src="region.jpg" alt="Community icon" loading="lazy">
-          <h3>Region Matcher</h3>
-          <p>Create a listing and find other participating students from the same country.</p>
-          <a href="region.html" class="btn btn-blue">Try Now</a>
-        </article>
 
         <article class="feature-card card">
-          <img src="mood.jpg" alt="Heart icon" loading="lazy">
-          <h3>Campus Mood Tracker</h3>
-          <p>Share one mood each day and see the aggregate mood from current UBverse participants.</p>
-          <a href="mood.html" class="btn btn-blue">Try Now</a>
+
+          <img
+            src="map-icon.svg"
+            alt="Map icon"
+            loading="lazy"
+          >
+
+          <h3>
+            Cultural Places Map
+          </h3>
+
+          <p>
+            Search Buffalo for restaurants and cultural places
+            by broad world region.
+          </p>
+
+          <a
+            href="map.html"
+            class="btn btn-blue"
+          >
+            Try Now
+          </a>
+
         </article>
+
+
+        <article class="feature-card card">
+
+          <img
+            src="region.jpg"
+            alt="Community icon"
+            loading="lazy"
+          >
+
+          <h3>
+            Region Matcher
+          </h3>
+
+          <p>
+            Create a listing and find other participating students
+            from the same country.
+          </p>
+
+          <a
+            href="region.html"
+            class="btn btn-blue"
+          >
+            Try Now
+          </a>
+
+        </article>
+
+
+        <article class="feature-card card">
+
+          <img
+            src="mood.jpg"
+            alt="Heart icon"
+            loading="lazy"
+          >
+
+          <h3>
+            Campus Mood Tracker
+          </h3>
+
+          <p>
+            Share one mood each day and see the aggregate mood
+            from current UBverse participants.
+          </p>
+
+          <a
+            href="mood.html"
+            class="btn btn-blue"
+          >
+            Try Now
+          </a>
+
+        </article>
+
       </div>
+
     </section>
 
-    <p class="disclaimer">UBverse is a student project and is not an official University at Buffalo website or service.</p>
+
+    <!-- =========================
+         DISCLAIMER
+         ========================= -->
+
+    <p class="disclaimer reveal">
+      UBverse is a student project and is not an official
+      University at Buffalo website or service.
+    </p>
+
   </main>
 
-  <footer>© 2026 UBverse</footer>
+
+  <footer>
+    © 2026 UBverse
+  </footer>
+
+
+  <script>
+    const revealElements = document.querySelectorAll(".reveal");
+
+    const observer = new IntersectionObserver(
+      entries => {
+
+        entries.forEach(entry => {
+
+          if (entry.isIntersecting) {
+
+            entry.target.classList.add("show");
+
+            observer.unobserve(entry.target);
+
+          }
+
+        });
+
+      },
+      {
+        threshold: 0.15
+      }
+    );
+
+    revealElements.forEach(element => {
+
+      observer.observe(element);
+
+    });
+  </script>
+
 </body>
 </html>

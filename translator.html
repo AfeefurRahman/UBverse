@@ -17,7 +17,6 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap"
     rel="stylesheet"
@@ -26,10 +25,6 @@
   <link rel="stylesheet" href="styles.css">
 
   <style>
-    /* =====================================================
-       TRANSLATOR LAYOUT
-    ===================================================== */
-
     .translator-page {
       width: min(820px, calc(100% - 32px));
       margin: 0 auto;
@@ -62,55 +57,25 @@
       max-width: 100%;
       overflow: hidden;
       box-sizing: border-box;
-
       background: #232634;
       border: 1px solid #383d50;
       border-radius: 15px;
-
-      box-shadow:
-        0 10px 30px rgba(0, 0, 0, .12);
-
+      box-shadow: 0 10px 30px rgba(0,0,0,.12);
       padding: 28px;
-
-      transition:
-        transform .25s ease,
-        box-shadow .25s ease,
-        border-color .25s ease;
     }
-
-    .translator-card:hover {
-      transform: translateY(-2px);
-      border-color: #434b64;
-
-      box-shadow:
-        0 16px 40px rgba(0, 0, 0, .18);
-    }
-
-    /* =====================================================
-       LANGUAGE SELECTORS
-    ===================================================== */
 
     .language-row {
       display: grid;
-
-      grid-template-columns:
-        minmax(0, 1fr)
-        auto
-        minmax(0, 1fr);
-
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
       gap: 12px;
       align-items: center;
-
       margin-bottom: 18px;
     }
 
     .language-field label {
       display: block;
-
       margin-bottom: 8px;
-
       color: #f3f6fb;
-
       font-size: .95rem;
       font-weight: 800;
     }
@@ -118,262 +83,108 @@
     .translator-card select,
     .translator-card textarea {
       display: block;
-
       width: 100% !important;
       max-width: 100% !important;
-
       box-sizing: border-box !important;
-
       margin: 0 !important;
-
       border: 1px solid #3d455d;
-
       border-radius: 11px;
-
       font: inherit;
-
       outline: none;
-
-      transition:
-        border-color .2s ease,
-        box-shadow .2s ease,
-        transform .2s ease,
-        background .2s ease;
     }
 
     .translator-card select {
       height: 50px;
-
       padding: 0 14px;
-
       background: #eef4ff;
-
       color: #111827;
-
-      cursor: pointer;
     }
 
     .translator-card textarea {
       min-height: 170px;
-
       padding: 15px 16px;
-
       background: #eef4ff;
-
       color: #111827;
-
       line-height: 1.55;
-
       resize: vertical;
-    }
-
-    .translator-card select:hover,
-    .translator-card textarea:hover {
-      border-color: #62749a;
     }
 
     .translator-card select:focus,
     .translator-card textarea:focus {
       border-color: #4f8fff;
-
-      box-shadow:
-        0 0 0 3px rgba(79, 143, 255, .15);
-
-      transform: translateY(-1px);
+      box-shadow: 0 0 0 3px rgba(79,143,255,.15);
     }
-
-    /* =====================================================
-       SWAP BUTTON
-    ===================================================== */
 
     .swap-btn {
       width: 48px;
       height: 48px;
-
       margin-top: 27px;
-
       border: 1px solid #4b5570;
-
       border-radius: 12px;
-
       background: #34394f;
-
       color: #fff;
-
       font-size: 1.4rem;
       font-weight: 800;
-
       cursor: pointer;
-
-      transition:
-        background .2s ease,
-        transform .2s ease,
-        box-shadow .2s ease;
+      transition: background .15s ease, transform .15s ease;
     }
 
     .swap-btn:hover {
       background: #2563eb;
-
-      transform:
-        translateY(-2px)
-        scale(1.05);
-
-      box-shadow:
-        0 8px 20px rgba(37, 99, 235, .25);
+      transform: translateY(-1px);
     }
-
-    .swap-btn.swapping {
-      animation: swapRotate .45s ease;
-    }
-
-    /* =====================================================
-       TEXT AREAS
-    ===================================================== */
 
     .text-grid {
       display: grid;
-
-      grid-template-columns:
-        minmax(0, 1fr)
-        minmax(0, 1fr);
-
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       gap: 16px;
-
       margin-top: 18px;
     }
 
     .text-panel label {
       display: block;
-
       margin-bottom: 8px;
-
       color: #f3f6fb;
-
       font-size: .95rem;
       font-weight: 800;
     }
 
-    #output-text {
-      background: #e8effc;
-    }
-
-    #output-text.translated {
-      animation: translatedFlash .55s ease;
-    }
-
-    /* =====================================================
-       TRANSLATE BUTTON
-    ===================================================== */
-
     .action-row {
       display: flex;
-
       justify-content: center;
-
       margin-top: 20px;
     }
 
     .translate-btn {
       min-width: 190px;
-
       border: 0;
-
       border-radius: 11px;
-
       padding: 14px 22px;
-
       background: #2563eb;
-
       color: #fff;
-
       font: inherit;
-
       font-weight: 800;
-
       cursor: pointer;
-
-      position: relative;
-
-      overflow: hidden;
-
-      transition:
-        background .2s ease,
-        transform .2s ease,
-        box-shadow .2s ease;
-    }
-
-    .translate-btn::after {
-      content: "";
-
-      position: absolute;
-
-      top: 0;
-
-      left: -120%;
-
-      width: 70%;
-      height: 100%;
-
-      background:
-        linear-gradient(
-          90deg,
-          transparent,
-          rgba(255, 255, 255, .25),
-          transparent
-        );
-
-      transform: skewX(-20deg);
-
-      transition: left .5s ease;
+      transition: background .15s ease, transform .15s ease;
     }
 
     .translate-btn:hover:not(:disabled) {
       background: #1d4ed8;
-
-      transform:
-        translateY(-2px)
-        scale(1.015);
-
-      box-shadow:
-        0 10px 24px rgba(37, 99, 235, .28);
-    }
-
-    .translate-btn:hover:not(:disabled)::after {
-      left: 150%;
-    }
-
-    .translate-btn:active:not(:disabled) {
-      transform: scale(.98);
+      transform: translateY(-1px);
     }
 
     .translate-btn:disabled {
       opacity: .65;
-
       cursor: not-allowed;
-
-      animation: buttonPulse 1.2s ease-in-out infinite;
     }
-
-    /* =====================================================
-       STATUS
-    ===================================================== */
 
     .status {
       min-height: 22px;
-
       margin: 14px 0 0;
-
       text-align: center;
-
       color: #bdc7da;
-
       font-size: .9rem;
-
       line-height: 1.45;
-    }
-
-    .status:not(:empty) {
-      animation: statusFade .3s ease both;
     }
 
     .status.error {
@@ -386,191 +197,155 @@
 
     .translator-note {
       margin-top: 34px;
-
       text-align: center;
-
       color: #9daac5;
-
       font-size: .84rem;
-
       line-height: 1.55;
     }
 
-    /* =====================================================
+
+    /* ===============================
        ANIMATIONS
-    ===================================================== */
-
+    ================================ */
     @keyframes fadeUp {
-      from {
-        opacity: 0;
-
-        transform:
-          translateY(18px);
-      }
-
-      to {
-        opacity: 1;
-
-        transform:
-          translateY(0);
-      }
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     @keyframes cardRise {
-      from {
-        opacity: 0;
-
-        transform:
-          translateY(24px)
-          scale(.985);
-      }
-
-      to {
-        opacity: 1;
-
-        transform:
-          translateY(0)
-          scale(1);
-      }
+      from { opacity: 0; transform: translateY(22px) scale(.985); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    @keyframes fieldAppear {
-      from {
-        opacity: 0;
-
-        transform:
-          translateY(10px)
-          scale(.98);
-      }
-
-      to {
-        opacity: 1;
-
-        transform:
-          translateY(0)
-          scale(1);
-      }
+    @keyframes fieldPop {
+      from { opacity: 0; transform: translateY(10px) scale(.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    @keyframes swapRotate {
-      0% {
-        transform: rotate(0deg);
-      }
-
-      50% {
-        transform:
-          rotate(180deg)
-          scale(1.08);
-      }
-
-      100% {
-        transform:
-          rotate(360deg);
-      }
+    @keyframes swapSpin {
+      0%   { transform: rotate(0deg) scale(1); }
+      50%  { transform: rotate(180deg) scale(1.08); }
+      100% { transform: rotate(360deg) scale(1); }
     }
 
-    @keyframes translatedFlash {
-      0% {
-        box-shadow:
-          0 0 0 0 rgba(34, 197, 94, .45);
-
-        transform: scale(.99);
-      }
-
-      50% {
-        box-shadow:
-          0 0 0 4px rgba(34, 197, 94, .2);
-
-        transform: scale(1.01);
-      }
-
-      100% {
-        box-shadow:
-          0 0 0 0 rgba(34, 197, 94, 0);
-
-        transform: scale(1);
-      }
+    @keyframes outputFlash {
+      0%   { box-shadow: 0 0 0 0 rgba(34,197,94,.35); transform: scale(.995); }
+      50%  { box-shadow: 0 0 0 4px rgba(34,197,94,.16); transform: scale(1.008); }
+      100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); transform: scale(1); }
     }
 
     @keyframes statusFade {
-      from {
-        opacity: 0;
-
-        transform:
-          translateY(5px);
-      }
-
-      to {
-        opacity: 1;
-
-        transform:
-          translateY(0);
-      }
+      from { opacity: 0; transform: translateY(5px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     @keyframes buttonPulse {
-      0%,
-      100% {
-        transform: scale(1);
-      }
-
-      50% {
-        transform: scale(1.025);
-      }
+      0%, 100% { transform: scale(1); }
+      50%      { transform: scale(1.025); }
     }
 
-    /* Page entrance */
-
     .translator-header {
-      animation:
-        fadeUp .55s ease both;
+      animation: fadeUp .55s ease both;
     }
 
     .translator-card {
-      animation:
-        cardRise .6s .08s ease both;
+      animation: cardRise .62s .08s ease both;
+      transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
     }
+
+    .translator-card:hover {
+      transform: translateY(-3px);
+      border-color: #46506a;
+      box-shadow: 0 16px 38px rgba(0,0,0,.18);
+    }
+
+    .language-field:first-child { animation: fieldPop .45s .18s ease both; }
+    .swap-btn                  { animation: fieldPop .45s .24s ease both; }
+    .language-field:last-child { animation: fieldPop .45s .30s ease both; }
+    .text-panel:first-child    { animation: fieldPop .45s .36s ease both; }
+    .text-panel:last-child     { animation: fieldPop .45s .42s ease both; }
+    .action-row                { animation: fadeUp .45s .48s ease both; }
 
     .translator-note {
-      animation:
-        fadeUp .55s .3s ease both;
+      animation: fadeUp .55s .30s ease both;
     }
 
-    /* Individual field entrance */
+    .translator-card select,
+    .translator-card textarea {
+      transition:
+        border-color .2s ease,
+        box-shadow .2s ease,
+        transform .2s ease,
+        background .2s ease;
+    }
 
-    .language-field:first-child {
-      animation:
-        fieldAppear .45s .17s ease both;
+    .translator-card select:focus,
+    .translator-card textarea:focus {
+      transform: translateY(-1px);
     }
 
     .swap-btn {
-      animation:
-        fieldAppear .45s .23s ease both;
+      transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
     }
 
-    .language-field:last-child {
-      animation:
-        fieldAppear .45s .29s ease both;
+    .swap-btn:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(37,99,235,.25);
     }
 
-    .text-panel:first-child {
-      animation:
-        fieldAppear .45s .35s ease both;
+    .swap-btn.swapping {
+      animation: swapSpin .45s ease;
     }
 
-    .text-panel:last-child {
-      animation:
-        fieldAppear .45s .41s ease both;
+    .translate-btn {
+      position: relative;
+      overflow: hidden;
+      transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
     }
 
-    .action-row {
-      animation:
-        fadeUp .45s .47s ease both;
+    .translate-btn::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -120%;
+      width: 70%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
+      transform: skewX(-20deg);
+      transition: left .5s ease;
     }
 
-    /* =====================================================
-       MOBILE
-    ===================================================== */
+    .translate-btn:hover:not(:disabled) {
+      transform: translateY(-2px) scale(1.01);
+      box-shadow: 0 10px 24px rgba(37,99,235,.25);
+    }
+
+    .translate-btn:hover:not(:disabled)::after {
+      left: 150%;
+    }
+
+    .translate-btn:disabled {
+      animation: buttonPulse 1.2s ease-in-out infinite;
+    }
+
+    #output-text.translated {
+      animation: outputFlash .55s ease;
+    }
+
+    .status:not(:empty) {
+      animation: statusFade .3s ease both;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
 
     @media (max-width: 700px) {
       .translator-page {
@@ -587,7 +362,6 @@
 
       .swap-btn {
         width: 100%;
-
         margin-top: 0;
       }
 
@@ -595,163 +369,51 @@
         grid-template-columns: 1fr;
       }
     }
-
-    /* =====================================================
-       ACCESSIBILITY
-    ===================================================== */
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        animation-duration: .01ms !important;
-
-        animation-iteration-count: 1 !important;
-
-        transition-duration: .01ms !important;
-
-        scroll-behavior: auto !important;
-      }
-    }
   </style>
 </head>
 
 <body>
-
-  <!-- ===================================================
-       NAVBAR
-  ==================================================== -->
-
   <div class="topnav">
     <div class="topnav-content">
-
-      <a
-        class="nav-left"
-        href="index.html"
-        style="text-decoration:none"
-        aria-label="UBverse home"
-      >
-        <img
-          src="favicon.png"
-          alt="UBverse logo"
-          class="logo"
-        >
-
-        <span class="logo-text">
-          UBverse
-        </span>
+      <a class="nav-left" href="index.html" style="text-decoration:none" aria-label="UBverse home">
+        <img src="favicon.png" alt="UBverse logo" class="logo">
+        <span class="logo-text">UBverse</span>
       </a>
 
       <div class="nav-right">
-        <a href="index.html">
-          Home
-        </a>
-
-        <a
-          class="active"
-          aria-current="page"
-          href="translator.html"
-        >
-          Translator
-        </a>
-
-        <a href="map.html">
-          Map
-        </a>
-
-        <a href="region.html">
-          Region Matcher
-        </a>
-
-        <a href="mood.html">
-          Mood Tracker
-        </a>
+        <a href="index.html">Home</a>
+        <a class="active" aria-current="page" href="translator.html">Translator</a>
+        <a href="map.html">Map</a>
+        <a href="region.html">Region Matcher</a>
+        <a href="mood.html">Mood Tracker</a>
       </div>
-
     </div>
   </div>
 
-  <!-- ===================================================
-       TRANSLATOR
-  ==================================================== -->
-
   <main class="translator-page">
-
     <header class="translator-header">
-
-      <h1>
-        🌐 Translator
-      </h1>
-
-      <p>
-        Translate text between popular world languages.
-      </p>
-
+      <h1>🌐 Translator</h1>
+      <p>Translate text between popular world languages.</p>
     </header>
 
-
     <section class="translator-card">
-
-      <!-- LANGUAGE SELECTION -->
-
       <div class="language-row">
-
         <div class="language-field">
-
-          <label for="source-lang">
-            From
-          </label>
-
+          <label for="source-lang">From</label>
           <select id="source-lang">
-
-            <option value="en">
-              English
-            </option>
-
-            <option value="hi">
-              Hindi हिन्दी
-            </option>
-
-            <option value="bn">
-              Bangla বাংলা
-            </option>
-
-            <option value="es">
-              Spanish Español
-            </option>
-
-            <option value="fr">
-              French Français
-            </option>
-
-            <option value="de">
-              German Deutsch
-            </option>
-
-            <option value="it">
-              Italian Italiano
-            </option>
-
-            <option value="zh">
-              Chinese 中文
-            </option>
-
-            <option value="ar">
-              Arabic العربية
-            </option>
-
-            <option value="ja">
-              Japanese 日本語
-            </option>
-
-            <option value="ko">
-              Korean 한국어
-            </option>
-
+            <option value="en">English</option>
+            <option value="hi">Hindi हिन्दी</option>
+            <option value="bn">Bangla বাংলা</option>
+            <option value="es">Spanish Español</option>
+            <option value="fr">French Français</option>
+            <option value="de">German Deutsch</option>
+            <option value="it">Italian Italiano</option>
+            <option value="zh">Chinese 中文</option>
+            <option value="ar">Arabic العربية</option>
+            <option value="ja">Japanese 日本語</option>
+            <option value="ko">Korean 한국어</option>
           </select>
-
         </div>
-
 
         <button
           id="swap-btn"
@@ -763,476 +425,170 @@
           ⇄
         </button>
 
-
         <div class="language-field">
-
-          <label for="target-lang">
-            To
-          </label>
-
+          <label for="target-lang">To</label>
           <select id="target-lang">
-
-            <option value="en">
-              English
-            </option>
-
-            <option value="hi">
-              Hindi हिन्दी
-            </option>
-
-            <option
-              value="bn"
-              selected
-            >
-              Bangla বাংলা
-            </option>
-
-            <option value="es">
-              Spanish Español
-            </option>
-
-            <option value="fr">
-              French Français
-            </option>
-
-            <option value="de">
-              German Deutsch
-            </option>
-
-            <option value="it">
-              Italian Italiano
-            </option>
-
-            <option value="zh">
-              Chinese 中文
-            </option>
-
-            <option value="ar">
-              Arabic العربية
-            </option>
-
-            <option value="ja">
-              Japanese 日本語
-            </option>
-
-            <option value="ko">
-              Korean 한국어
-            </option>
-
+            <option value="en">English</option>
+            <option value="hi">Hindi हिन्दी</option>
+            <option value="bn" selected>Bangla বাংলা</option>
+            <option value="es">Spanish Español</option>
+            <option value="fr">French Français</option>
+            <option value="de">German Deutsch</option>
+            <option value="it">Italian Italiano</option>
+            <option value="zh">Chinese 中文</option>
+            <option value="ar">Arabic العربية</option>
+            <option value="ja">Japanese 日本語</option>
+            <option value="ko">Korean 한국어</option>
           </select>
-
         </div>
-
       </div>
 
-
-      <!-- TEXT BOXES -->
-
       <div class="text-grid">
-
         <div class="text-panel">
-
-          <label for="input-text">
-            Text to translate
-          </label>
-
+          <label for="input-text">Text to translate</label>
           <textarea
             id="input-text"
             maxlength="1000"
             placeholder="Enter text here..."
           ></textarea>
-
         </div>
 
-
         <div class="text-panel">
-
-          <label for="output-text">
-            Translation
-          </label>
-
+          <label for="output-text">Translation</label>
           <textarea
             id="output-text"
             placeholder="Translation will appear here..."
             readonly
           ></textarea>
-
         </div>
-
       </div>
-
-
-      <!-- TRANSLATE BUTTON -->
 
       <div class="action-row">
-
-        <button
-          id="translate-btn"
-          class="translate-btn"
-          type="button"
-        >
+        <button id="translate-btn" class="translate-btn" type="button">
           Translate
         </button>
-
       </div>
 
-
-      <p
-        id="translate-status"
-        class="status"
-        aria-live="polite"
-      ></p>
-
+      <p id="translate-status" class="status" aria-live="polite"></p>
     </section>
 
-
     <p class="translator-note">
-      Translation is provided by the MyMemory translation
-      service. For important academic or official documents,
-      verify the translation with a qualified person.
+      Translation is provided by the MyMemory translation service. For important academic or official documents, verify the translation with a qualified person.
     </p>
-
   </main>
-
-
-  <!-- ===================================================
-       JAVASCRIPT
-  ==================================================== -->
 
   <script>
     (() => {
-
-      const sourceLang =
-        document.getElementById('source-lang');
-
-      const targetLang =
-        document.getElementById('target-lang');
-
-      const inputText =
-        document.getElementById('input-text');
-
-      const outputText =
-        document.getElementById('output-text');
-
-      const translateBtn =
-        document.getElementById('translate-btn');
-
-      const swapBtn =
-        document.getElementById('swap-btn');
-
-      const status =
-        document.getElementById('translate-status');
-
-
-      /* -----------------------------------------------
-         STATUS MESSAGE
-      ------------------------------------------------ */
+      const sourceLang = document.getElementById('source-lang');
+      const targetLang = document.getElementById('target-lang');
+      const inputText = document.getElementById('input-text');
+      const outputText = document.getElementById('output-text');
+      const translateBtn = document.getElementById('translate-btn');
+      const swapBtn = document.getElementById('swap-btn');
+      const status = document.getElementById('translate-status');
 
       function setStatus(message, type = '') {
-
-        status.className =
-          `status${type ? ` ${type}` : ''}`;
-
+        status.className = `status${type ? ` ${type}` : ''}`;
         status.textContent = message;
-
       }
 
-
-      /* -----------------------------------------------
-         TRANSLATE
-      ------------------------------------------------ */
-
       async function translateText() {
-
-        const text =
-          inputText.value.trim();
-
+        const text = inputText.value.trim();
 
         if (!text) {
-
           outputText.value = '';
-
-          setStatus(
-            'Please enter some text to translate.',
-            'error'
-          );
-
+          setStatus('Please enter some text to translate.', 'error');
           inputText.focus();
-
           return;
-
         }
-
 
         if (sourceLang.value === targetLang.value) {
-
           outputText.value = text;
-
-          animateOutput();
-
-          setStatus(
-            'Source and target languages are the same.',
-            'success'
-          );
-
+          setStatus('Source and target languages are the same.', 'success');
           return;
-
         }
 
-
         translateBtn.disabled = true;
-
-        translateBtn.textContent =
-          'Translating...';
-
+        translateBtn.textContent = 'Translating...';
         outputText.value = '';
+        setStatus('Translating...');
 
-        setStatus(
-          'Translating...'
-        );
-
-
-        const controller =
-          new AbortController();
-
-
-        const timeout =
-          setTimeout(
-            () => controller.abort(),
-            12000
-          );
-
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 12000);
 
         const url =
           'https://api.mymemory.translated.net/get?q=' +
           encodeURIComponent(text) +
           '&langpair=' +
-          encodeURIComponent(
-            sourceLang.value +
-            '|' +
-            targetLang.value
-          );
-
+          encodeURIComponent(sourceLang.value + '|' + targetLang.value);
 
         try {
-
-          const response =
-            await fetch(
-              url,
-              {
-                method: 'GET',
-                signal: controller.signal
-              }
-            );
-
+          const response = await fetch(url, {
+            method: 'GET',
+            signal: controller.signal
+          });
 
           if (!response.ok) {
-
-            throw new Error(
-              `Translation request failed (${response.status})`
-            );
-
+            throw new Error(`Translation request failed (${response.status})`);
           }
 
-
-          const data =
-            await response.json();
-
+          const data = await response.json();
 
           if (
             data &&
             data.responseData &&
-            typeof data.responseData.translatedText
-              === 'string'
+            typeof data.responseData.translatedText === 'string'
           ) {
-
-            outputText.value =
-              data.responseData.translatedText;
-
-            animateOutput();
-
-            setStatus(
-              'Translation complete.',
-              'success'
-            );
-
+            outputText.value = data.responseData.translatedText;
+            outputText.classList.remove('translated');
+            void outputText.offsetWidth;
+            outputText.classList.add('translated');
+            setStatus('Translation complete.', 'success');
+          } else {
+            throw new Error('No translation was returned.');
           }
-
-          else {
-
-            throw new Error(
-              'No translation was returned.'
-            );
-
-          }
-
-        }
-
-        catch (error) {
-
+        } catch (error) {
           console.error(error);
 
-
           if (error.name === 'AbortError') {
-
-            setStatus(
-              'The translation service took too long to respond. Please try again.',
-              'error'
-            );
-
+            setStatus('The translation service took too long to respond. Please try again.', 'error');
+          } else {
+            setStatus('Could not connect to the translation service. Please try again.', 'error');
           }
-
-          else {
-
-            setStatus(
-              'Could not connect to the translation service. Please try again.',
-              'error'
-            );
-
-          }
-
-        }
-
-        finally {
-
+        } finally {
           clearTimeout(timeout);
-
           translateBtn.disabled = false;
-
-          translateBtn.textContent =
-            'Translate';
-
+          translateBtn.textContent = 'Translate';
         }
-
       }
 
+      translateBtn.addEventListener('click', translateText);
 
-      /* -----------------------------------------------
-         OUTPUT ANIMATION
-      ------------------------------------------------ */
-
-      function animateOutput() {
-
-        outputText.classList.remove(
-          'translated'
-        );
-
-        void outputText.offsetWidth;
-
-        outputText.classList.add(
-          'translated'
-        );
-
-      }
-
-
-      /* -----------------------------------------------
-         TRANSLATE BUTTON
-      ------------------------------------------------ */
-
-      translateBtn.addEventListener(
-        'click',
-        translateText
-      );
-
-
-      /* -----------------------------------------------
-         CMD / CTRL + ENTER
-      ------------------------------------------------ */
-
-      inputText.addEventListener(
-        'keydown',
-        (event) => {
-
-          if (
-            (
-              event.ctrlKey ||
-              event.metaKey
-            ) &&
-            event.key === 'Enter'
-          ) {
-
-            event.preventDefault();
-
-            translateText();
-
-          }
-
+      inputText.addEventListener('keydown', (event) => {
+        if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+          event.preventDefault();
+          translateText();
         }
-      );
+      });
 
+      swapBtn.addEventListener('click', () => {
+        const oldSource = sourceLang.value;
+        sourceLang.value = targetLang.value;
+        targetLang.value = oldSource;
 
-      /* -----------------------------------------------
-         SWAP LANGUAGES
-      ------------------------------------------------ */
-
-      swapBtn.addEventListener(
-        'click',
-        () => {
-
-          swapBtn.classList.remove(
-            'swapping'
-          );
-
-          void swapBtn.offsetWidth;
-
-          swapBtn.classList.add(
-            'swapping'
-          );
-
-
-          const oldSource =
-            sourceLang.value;
-
-
-          sourceLang.value =
-            targetLang.value;
-
-
-          targetLang.value =
-            oldSource;
-
-
-          if (
-            outputText.value.trim()
-          ) {
-
-            const oldInput =
-              inputText.value;
-
-
-            inputText.value =
-              outputText.value;
-
-
-            outputText.value =
-              oldInput;
-
-
-            animateOutput();
-
-          }
-
-
-          setStatus('');
-
+        if (outputText.value.trim()) {
+          const oldInput = inputText.value;
+          inputText.value = outputText.value;
+          outputText.value = oldInput;
         }
-      );
 
+        setStatus('');
+      });
 
-      swapBtn.addEventListener(
-        'animationend',
-        () => {
-
-          swapBtn.classList.remove(
-            'swapping'
-          );
-
-        }
-      );
-
+      swapBtn.addEventListener('animationend', () => {
+        swapBtn.classList.remove('swapping');
+      });
     })();
   </script>
-
 </body>
 </html>

@@ -53,6 +53,9 @@
     }
 
     .region-card {
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
       background: #232634;
       border: 1px solid #383d50;
       border-radius: 15px;
@@ -92,8 +95,11 @@
     .region-card input[type="text"],
     .region-card input[type="email"],
     .region-card input[type="tel"] {
-      width: 100%;
-      margin: 0 0 7px;
+      display: block;
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+      margin: 0 0 7px 0 !important;
       padding: 14px 16px;
       border: 1px solid #3d455d;
       border-radius: 11px;
@@ -111,15 +117,32 @@
     .check-row {
       display: flex;
       align-items: flex-start;
+      justify-content: flex-start;
       gap: 10px;
       margin: 15px 0;
       color: #f3f6fb;
       line-height: 1.45;
+      width: 100%;
+      text-align: left;
     }
 
-    .check-row input {
-      margin-top: 3px;
-      flex: 0 0 auto;
+    .check-row input[type="checkbox"] {
+      width: 18px !important;
+      height: 18px !important;
+      min-width: 18px !important;
+      max-width: 18px !important;
+      flex: 0 0 18px !important;
+      margin: 2px 0 0 0 !important;
+      padding: 0 !important;
+      border-radius: 3px;
+    }
+
+    .check-row span {
+      flex: 1 1 auto;
+      min-width: 0;
+      width: auto;
+      text-align: left;
+      white-space: normal;
     }
 
     .primary-btn {

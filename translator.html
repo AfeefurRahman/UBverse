@@ -31,7 +31,7 @@
         <img src="ub.jpg" alt="UBverse logo" class="logo"><span class="logo-text">UBverse</span>
       </a>
       <div class="nav-right">
-        <a href="index.html">Home</a><a href="chat.html">Chat</a><a class="active" aria-current="page" href="translator.html">Translator</a><a href="map.html">Map</a><a href="region.html">Region Matcher</a><a href="mood.html">Mood Tracker</a>
+        <a href="index.html">Home</a><a class="active" aria-current="page" href="translator.html">Translator</a><a href="map.html">Map</a><a href="region.html">Region Matcher</a><a href="mood.html">Mood Tracker</a>
       </div>
     </div>
   </nav>
@@ -43,98 +43,3 @@
     </div>
 
     <div class="center-form">
-      <div class="language-select">
-        <div>
-          <label for="source-lang">From</label>
-          <select id="source-lang">
-            <option value="en" selected>English</option><option value="hi">Hindi हिन्दी</option><option value="bn">Bangla বাংলা</option><option value="es">Spanish Español</option><option value="fr">French Français</option><option value="de">German Deutsch</option><option value="it">Italian Italiano</option><option value="zh">Chinese 中文</option>
-          </select>
-        </div>
-        <button id="swap-btn" class="swap-btn" type="button" title="Swap languages" aria-label="Swap languages">⇄</button>
-        <div>
-          <label for="target-lang">To</label>
-          <select id="target-lang">
-            <option value="en">English</option><option value="hi">Hindi हिन्दी</option><option value="bn" selected>Bangla বাংলা</option><option value="es">Spanish Español</option><option value="fr">French Français</option><option value="de">German Deutsch</option><option value="it">Italian Italiano</option><option value="zh">Chinese 中文</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="text-area-container">
-        <label for="input-text">Text to translate</label>
-        <textarea id="input-text" maxlength="1500" placeholder="Enter text here..."></textarea>
-        <button type="button" class="btn btn-blue" id="translate-btn">Translate</button>
-        <label for="output-text">Translation</label>
-        <textarea id="output-text" placeholder="Translation will appear here..." readonly></textarea>
-        <p id="translator-status" class="status" aria-live="polite"></p>
-        <p class="help-text">Translations are provided by the third-party MyMemory service, so avoid entering sensitive information.</p>
-      </div>
-    </div>
-  </main>
-
-  <footer>© 2026 UBverse • Student project</footer>
-
-  <script>
-    const inputText = document.getElementById('input-text');
-    const outputText = document.getElementById('output-text');
-    const sourceLang = document.getElementById('source-lang');
-    const targetLang = document.getElementById('target-lang');
-    const translateBtn = document.getElementById('translate-btn');
-    const status = document.getElementById('translator-status');
-
-    async function translateText() {
-      const text = inputText.value.trim();
-      if (!text) {
-        status.className = 'status error';
-        status.textContent = 'Please enter some text to translate.';
-        inputText.focus();
-        return;
-      }
-      if (sourceLang.value === targetLang.value) {
-        outputText.value = text;
-        status.className = 'status';
-        status.textContent = 'The source and target languages are the same.';
-        return;
-      }
-
-      translateBtn.disabled = true;
-      translateBtn.textContent = 'Translating…';
-      outputText.value = '';
-      status.className = 'status';
-      status.textContent = '';
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 12000);
-
-      try {
-        const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${sourceLang.value}|${targetLang.value}`;
-        const response = await fetch(url, { signal: controller.signal });
-        const data = await response.json().catch(() => ({}));
-        if (!response.ok || !data.responseData?.translatedText) throw new Error('Translation failed');
-        outputText.value = data.responseData.translatedText;
-        status.className = 'status success';
-        status.textContent = 'Translation complete.';
-      } catch (error) {
-        status.className = 'status error';
-        status.textContent = error.name === 'AbortError' ? 'Translation timed out. Please try again.' : 'Could not connect to the translation service.';
-      } finally {
-        clearTimeout(timeout);
-        translateBtn.disabled = false;
-        translateBtn.textContent = 'Translate';
-      }
-    }
-
-    translateBtn.addEventListener('click', translateText);
-    inputText.addEventListener('keydown', (event) => {
-      if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') translateText();
-    });
-
-    document.getElementById('swap-btn').addEventListener('click', () => {
-      [sourceLang.value, targetLang.value] = [targetLang.value, sourceLang.value];
-      if (outputText.value) {
-        inputText.value = outputText.value;
-        outputText.value = '';
-      }
-      status.textContent = '';
-    });
-  </script>
-</body>
-</html>

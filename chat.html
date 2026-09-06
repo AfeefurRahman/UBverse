@@ -6,10 +6,10 @@
 
   <meta
     name="description"
-    content="Chat with UB GlobalPal, UBverse's student-built AI assistant for international students at the University at Buffalo."
+    content="The UB GlobalPal chat feature has been removed from UBverse."
   >
 
-  <title>Chat | UBverse</title>
+  <title>Chat Removed | UBverse</title>
 
   <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png">
   <link rel="apple-touch-icon" href="/favicon.png">
@@ -33,7 +33,7 @@
         <span class="logo-text">UBverse</span>
       </a>
       <div class="nav-right">
-        <a href="index.html">Home</a><a class="active" aria-current="page" href="chat.html">Chat</a><a href="translator.html">Translator</a><a href="map.html">Map</a><a href="region.html">Region M[...]
+        <a href="index.html">Home</a><a href="translator.html">Translator</a><a href="map.html">Map</a><a href="region.html">Region Matcher</a><a href="mood.html">Mood Tracker</a>
       </div>
     </div>
   </nav>
@@ -43,93 +43,17 @@
       <header class="chat-header">
         <div class="chat-header-icon" aria-hidden="true">🐂</div>
         <div>
-          <h1>UB GlobalPal</h1>
-          <p>Student-project AI assistant • verify official policies with UB</p>
+          <h1>UB GlobalPal — Removed</h1>
+          <p>The Chat feature has been removed from this site. Use the other tools on UBverse or visit the homepage.</p>
         </div>
       </header>
 
-      <div id="chat-box" aria-live="polite" aria-label="Conversation">
-        <div class="message bot">Hey there! I'm GlobalPal 🐂💙.
-
-I can help with everyday life at UB and around Buffalo. Ask about food, campus culture, local basics, or general student questions.</div>
+      <div style="margin:28px 0;text-align:center">
+        <p>If you were using the AI chat, it is no longer available. <a href="index.html">Return to Home</a></p>
       </div>
-
-      <div class="quick-replies" aria-label="Suggested questions">
-        <button class="chip" type="button" data-query="Where can I get halal food near UB?">🌯 Halal Food</button>
-        <button class="chip" type="button" data-query="I feel lonely and want ideas for meeting people on campus">😔 Feeling Lonely</button>
-        <button class="chip" type="button" data-query="How much should I tip in the US?">💵 Tipping Rules</button>
-        <button class="chip" type="button" data-query="What is Tim Hortons and what do people usually order?">☕ Timmies?</button>
-      </div>
-
-      <form class="input-zone" id="chat-form">
-        <label for="user-input" class="sr-only" style="position:absolute;left:-9999px">Message</label>
-        <input type="text" id="user-input" maxlength="1200" placeholder="Ask me anything..." autocomplete="off" required>
-        <button type="submit" id="send-btn" aria-label="Send message">➤</button>
-      </form>
     </section>
   </main>
 
-  <script>
-    const chatBox = document.getElementById('chat-box');
-    const userInput = document.getElementById('user-input');
-    const sendBtn = document.getElementById('send-btn');
-    const form = document.getElementById('chat-form');
-    let history = [];
-
-    function appendMessage(text, sender, isLoading = false) {
-      const div = document.createElement('div');
-      div.className = `message ${sender}${isLoading ? ' loading-dots' : ''}`;
-      div.textContent = String(text);
-      chatBox.appendChild(div);
-      chatBox.scrollTop = chatBox.scrollHeight;
-      return div;
-    }
-
-    async function ask(query) {
-      const message = String(query || '').trim();
-      if (!message || sendBtn.disabled) return;
-
-      appendMessage(message, 'user');
-      userInput.value = '';
-      sendBtn.disabled = true;
-      const loadingMsg = appendMessage('Typing', 'bot', true);
-
-      try {
-        const res = await fetch('https://ubverse-api.onrender.com/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message, history })
-        });
-        const data = await res.json().catch(() => ({}));
-        loadingMsg.remove();
-
-        if (!res.ok) {
-          appendMessage(data.error || `Chat request failed (${res.status}).`, 'bot');
-          return;
-        }
-
-        const reply = data.reply || 'Sorry, I could not generate a response.';
-        appendMessage(reply, 'bot');
-        history.push({ role: 'user', parts: [{ text: message }] });
-        history.push({ role: 'model', parts: [{ text: reply }] });
-        history = history.slice(-12);
-      } catch (error) {
-        loadingMsg.remove();
-        appendMessage('⚠️ I could not reach the UBverse server. Make sure server.js is running.', 'bot');
-      } finally {
-        sendBtn.disabled = false;
-        userInput.focus();
-      }
-    }
-
-    form.addEventListener('submit', (event) => {
-      event.preventDefault();
-      ask(userInput.value);
-    });
-
-    document.querySelectorAll('.chip').forEach((button) => {
-      button.addEventListener('click', () => ask(button.dataset.query));
-    });
-  </script>
+  <footer>© 2026 UBverse</footer>
 </body>
 </html>

@@ -1,24 +1,17 @@
 {
   "name": "ubverse",
-  "version": "1.1.0",
-  "description": "UBverse campus companion for international students",
+  "version": "1.0.0",
+  "description": "UBverse backend API",
   "main": "server.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node server.js",
-    "dev": "NODE_ENV=development node --watch server.js",
-    "check": "node --check server.js"
+    "start": "node server.js"
   },
-  "keywords": [
-    "ubverse",
-    "university-at-buffalo",
-    "international-students",
-    "express"
-  ],
-  "license": "MIT",
   "dependencies": {
+    "@google/genai": "^1.0.0",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
-    "cors": "^2.8.5"
+    "pg": "^8.16.3"
   }
 }

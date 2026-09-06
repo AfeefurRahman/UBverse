@@ -1,152 +1,157 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Region Matcher | UBverse</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <nav class="topnav" aria-label="Main navigation">
-    <div class="topnav-content">
-      <a class="nav-left" href="index.html" style="text-decoration:none" aria-label="UBverse home"><img src="ub.jpg" alt="UBverse logo" class="logo"><span class="logo-text">UBverse</span></a>
-      <div class="nav-right">
-        <a href="index.html">Home</a><a href="chat.html">Chat</a><a href="translator.html">Translator</a><a href="map.html">Map</a><a class="active" aria-current="page" href="region.html">Region Matcher</a><a href="mood.html">Mood Tracker</a>
-      </div>
-    </div>
-  </nav>
+<script>
+  const STORAGE_KEY = 'ubverseStudents';
 
-  <main class="dashboard-section">
-    <div class="dashboard-header">
-      <h1>Region Matcher</h1>
-      <p>Register and find participating students from the same country.</p>
-    </div>
+  const regForm = document.getElementById('regForm');
+  const registerBtn = document.getElementById('registerBtn');
+  const registerStatus = document.getElementById('registerStatus');
 
-    <div class="center-form">
-      <div class="privacy-note">Only share contact information you are comfortable making visible to other UBverse users. This student project does not provide identity verification.</div>
+  const searchBtn = document.getElementById('searchBtn');
+  const searchCountry = document.getElementById('searchCountry');
+  const searchStatus = document.getElementById('searchStatus');
+  const results = document.getElementById('results');
 
-      <form id="regForm">
-        <div class="field"><label for="name">Name</label><input type="text" id="name" maxlength="80" autocomplete="name" placeholder="Your name" required></div>
-        <div class="field"><label for="country">Country</label><input type="text" id="country" maxlength="80" autocomplete="country-name" placeholder="e.g. Bangladesh" required></div>
-        <div class="field"><label for="ubit">UBIT Email</label><input type="email" id="ubit" maxlength="120" autocomplete="email" placeholder="you@buffalo.edu" pattern=".+@buffalo\.edu" required><p class="help-text">A @buffalo.edu address is required.</p></div>
-        <div class="field"><label for="phone">Phone Number <span style="font-weight:400;color:#b8c3da">(optional)</span></label><input type="tel" id="phone" maxlength="30" autocomplete="tel" placeholder="Optional phone number"></div>
-        <div class="checkbox-row"><input type="checkbox" id="sharePhone"><label for="sharePhone">Show my phone number in search results.</label></div>
-        <div class="checkbox-row"><input type="checkbox" id="consent" required><label for="consent">I agree to list my name and UBIT email for other UBverse users searching my country.</label></div>
-        <button type="submit" class="btn btn-blue" id="registerBtn" style="width:100%">Register / Update Listing</button>
-        <p id="registerStatus" class="status" aria-live="polite"></p>
-      </form>
+  function setStatus(element, message, type = '') {
+    element.className = `status${type ? ` ${type}` : ''}`;
+    element.textContent = message;
+  }
 
-      <hr class="section-divider">
+  function getStudents() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    } catch {
+      return [];
+    }
+  }
 
-      <section aria-labelledby="search-heading">
-        <h2 id="search-heading">Find Students</h2>
-        <div class="search-row">
-          <div><label for="searchCountry">Search by country</label><input type="text" id="searchCountry" maxlength="80" placeholder="Country name"></div>
-          <button id="searchBtn" type="button" class="btn btn-blue">Search</button>
-        </div>
-        <p id="searchStatus" class="status" aria-live="polite"></p>
-        <div id="results" class="dashboard-list"></div>
-      </section>
-    </div>
-  </main>
+  function saveStudents(students) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(students));
+  }
 
-  <footer>© 2026 UBverse • Student project</footer>
+  // REGISTER
+  regForm.addEventListener('submit', (event) => {
+    event.preventDefault();
 
-  <script>
-    const regForm = document.getElementById('regForm');
-    const registerBtn = document.getElementById('registerBtn');
-    const registerStatus = document.getElementById('registerStatus');
-    const searchBtn = document.getElementById('searchBtn');
-    const searchCountry = document.getElementById('searchCountry');
-    const searchStatus = document.getElementById('searchStatus');
-    const results = document.getElementById('results');
+    const name = document.getElementById('name').value.trim();
+    const country = document.getElementById('country').value.trim();
+    const ubit = document.getElementById('ubit').value.trim().toLowerCase();
+    const phone = document.getElementById('phone').value.trim();
+    const sharePhone = document.getElementById('sharePhone').checked;
+    const consent = document.getElementById('consent').checked;
 
-    function setStatus(element, message, type = '') {
-      element.className = `status${type ? ` ${type}` : ''}`;
-      element.textContent = message;
+    if (!name || !country || !ubit) {
+      setStatus(registerStatus, 'Please complete all required fields.', 'error');
+      return;
     }
 
-    regForm.addEventListener('submit', async (event) => {
+    if (!ubit.endsWith('@buffalo.edu')) {
+      setStatus(
+        registerStatus,
+        'Please use a valid @buffalo.edu email address.',
+        'error'
+      );
+      return;
+    }
+
+    if (!consent) {
+      setStatus(registerStatus, 'You must agree before registering.', 'error');
+      return;
+    }
+
+    const students = getStudents();
+
+    const existingIndex = students.findIndex(
+      student => student.ubit === ubit
+    );
+
+    const student = {
+      name,
+      country,
+      ubit,
+      phone,
+      sharePhone
+    };
+
+    if (existingIndex >= 0) {
+      students[existingIndex] = student;
+    } else {
+      students.push(student);
+    }
+
+    saveStudents(students);
+
+    setStatus(
+      registerStatus,
+      'Registration saved successfully!',
+      'success'
+    );
+
+    searchCountry.value = country;
+    regForm.reset();
+  });
+
+  // SEARCH
+  function searchStudents() {
+    const country = searchCountry.value.trim().toLowerCase();
+
+    results.replaceChildren();
+
+    if (!country) {
+      setStatus(searchStatus, 'Enter a country to search.', 'error');
+      return;
+    }
+
+    const students = getStudents();
+
+    const found = students.filter(
+      student => student.country.toLowerCase() === country
+    );
+
+    if (found.length === 0) {
+      setStatus(
+        searchStatus,
+        'No students found from that country yet.'
+      );
+      return;
+    }
+
+    setStatus(
+      searchStatus,
+      `${found.length} student${found.length === 1 ? '' : 's'} found.`,
+      'success'
+    );
+
+    found.forEach(student => {
+      const card = document.createElement('div');
+      card.className = 'student';
+
+      const name = document.createElement('strong');
+      name.textContent = student.name;
+
+      const countryLine = document.createElement('div');
+      countryLine.textContent = student.country;
+
+      const email = document.createElement('a');
+      email.href = `mailto:${student.ubit}`;
+      email.textContent = student.ubit;
+
+      card.append(name, countryLine, email);
+
+      if (student.sharePhone && student.phone) {
+        const phone = document.createElement('div');
+        phone.textContent = `Phone: ${student.phone}`;
+        card.append(phone);
+      }
+
+      results.appendChild(card);
+    });
+  }
+
+  searchBtn.addEventListener('click', searchStudents);
+
+  searchCountry.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
       event.preventDefault();
-      registerBtn.disabled = true;
-      setStatus(registerStatus, 'Saving…');
-      try {
-        const response = await fetch('/api/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: document.getElementById('name').value,
-            country: document.getElementById('country').value,
-            ubit: document.getElementById('ubit').value,
-            phone: document.getElementById('phone').value,
-            sharePhone: document.getElementById('sharePhone').checked,
-            consent: document.getElementById('consent').checked
-          })
-        });
-        const data = await response.json().catch(() => ({}));
-        if (!response.ok) throw new Error(data.error || 'Registration failed.');
-        setStatus(registerStatus, data.message || 'Saved.', 'success');
-        const country = document.getElementById('country').value;
-        regForm.reset();
-        searchCountry.value = country;
-      } catch (error) {
-        setStatus(registerStatus, error.message || 'Could not save your listing.', 'error');
-      } finally {
-        registerBtn.disabled = false;
-      }
-    });
-
-    async function searchStudents() {
-      const country = searchCountry.value.trim();
-      results.replaceChildren();
-      if (!country) {
-        setStatus(searchStatus, 'Enter a country to search.', 'error');
-        return;
-      }
-      searchBtn.disabled = true;
-      setStatus(searchStatus, 'Searching…');
-      try {
-        const response = await fetch(`/api/students?country=${encodeURIComponent(country)}`);
-        const data = await response.json().catch(() => ({}));
-        if (!response.ok) throw new Error(data.error || 'Search failed.');
-        const students = data.students || [];
-        if (!students.length) {
-          setStatus(searchStatus, 'No participating students found from that country yet.');
-          return;
-        }
-        setStatus(searchStatus, `${students.length} student${students.length === 1 ? '' : 's'} found.`, 'success');
-        for (const student of students) {
-          const card = document.createElement('div');
-          card.className = 'student';
-          const name = document.createElement('strong');
-          name.textContent = student.name;
-          const countryLine = document.createElement('div');
-          countryLine.textContent = student.country;
-          const email = document.createElement('a');
-          email.href = `mailto:${student.email}`;
-          email.textContent = student.email;
-          card.append(name, countryLine, email);
-          if (student.phone) {
-            const phone = document.createElement('div');
-            phone.textContent = `Phone: ${student.phone}`;
-            card.append(phone);
-          }
-          results.append(card);
-        }
-      } catch (error) {
-        setStatus(searchStatus, error.message || 'Could not search right now.', 'error');
-      } finally {
-        searchBtn.disabled = false;
-      }
+      searchStudents();
     }
-
-    searchBtn.addEventListener('click', searchStudents);
-    searchCountry.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') { event.preventDefault(); searchStudents(); }
-    });
-  </script>
-</body>
-</html>
+  });
+</script>

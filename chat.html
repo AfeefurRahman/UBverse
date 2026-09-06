@@ -33,7 +33,7 @@
         <span class="logo-text">UBverse</span>
       </a>
       <div class="nav-right">
-        <a href="index.html">Home</a><a class="active" aria-current="page" href="chat.html">Chat</a><a href="translator.html">Translator</a><a href="map.html">Map</a><a href="region.html">Region Matcher</a><a href="mood.html">Mood Tracker</a>
+        <a href="index.html">Home</a><a class="active" aria-current="page" href="chat.html">Chat</a><a href="translator.html">Translator</a><a href="map.html">Map</a><a href="region.html">Region M[...]
       </div>
     </div>
   </nav>
@@ -49,7 +49,7 @@
       </header>
 
       <div id="chat-box" aria-live="polite" aria-label="Conversation">
-        <div class="message bot">Hey there! I’m GlobalPal 🐂💙.
+        <div class="message bot">Hey there! I'm GlobalPal 🐂💙.
 
 I can help with everyday life at UB and around Buffalo. Ask about food, campus culture, local basics, or general student questions.</div>
       </div>
@@ -95,16 +95,16 @@ I can help with everyday life at UB and around Buffalo. Ask about food, campus c
       const loadingMsg = appendMessage('Typing', 'bot', true);
 
       try {
-          const res = await fetch('https://ubverse-api.onrender.com/api/chat', {
+        const res = await fetch('https://ubverse-api.onrender.com/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ message, history })
         });
-        const data = await response.json().catch(() => ({}));
+        const data = await res.json().catch(() => ({}));
         loadingMsg.remove();
 
-        if (!response.ok) {
-          appendMessage(data.error || `Chat request failed (${response.status}).`, 'bot');
+        if (!res.ok) {
+          appendMessage(data.error || `Chat request failed (${res.status}).`, 'bot');
           return;
         }
 

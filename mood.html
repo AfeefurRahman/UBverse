@@ -98,7 +98,7 @@
       padding: 13px 8px;
       font-family: inherit;
       font-weight: 800;
-      transition: transform .15s ease, background .15s ease, border-color .15s ease;
+      transition: transform .2s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
     }
 
     .mood-option:hover:not(:disabled) {
@@ -200,6 +200,95 @@
       color: #9daac5;
       font-size: .84rem;
       line-height: 1.5;
+    }
+
+
+    /* ---- ANIMATIONS ---- */
+    @keyframes pageFadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes cardRise {
+      from { opacity: 0; transform: translateY(20px) scale(.985); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes optionPop {
+      from { opacity: 0; transform: translateY(12px) scale(.94); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes emojiBounce {
+      0%, 100% { transform: translateY(0) scale(1); }
+      45%      { transform: translateY(-7px) scale(1.12); }
+      70%      { transform: translateY(1px) scale(1.03); }
+    }
+
+    @keyframes selectedPulse {
+      0%   { box-shadow: 0 0 0 0 rgba(79, 143, 255, .45); }
+      70%  { box-shadow: 0 0 0 10px rgba(79, 143, 255, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(79, 143, 255, 0); }
+    }
+
+    @keyframes statusFade {
+      from { opacity: 0; transform: translateY(5px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .mood-page-header {
+      animation: pageFadeUp .55s ease both;
+    }
+
+    .mood-choice-card {
+      animation: cardRise .6s .08s ease both;
+    }
+
+    .results-card {
+      animation: cardRise .6s .16s ease both;
+    }
+
+    .mood-note {
+      animation: pageFadeUp .55s .24s ease both;
+    }
+
+    .mood-option {
+      animation: optionPop .45s ease both;
+    }
+
+    .mood-option:nth-child(1) { animation-delay: .16s; }
+    .mood-option:nth-child(2) { animation-delay: .22s; }
+    .mood-option:nth-child(3) { animation-delay: .28s; }
+    .mood-option:nth-child(4) { animation-delay: .34s; }
+    .mood-option:nth-child(5) { animation-delay: .40s; }
+
+    .mood-option:hover:not(:disabled) .mood-emoji {
+      animation: emojiBounce .5s ease;
+    }
+
+    .mood-option.selected {
+      animation: selectedPulse .7s ease;
+    }
+
+    #vote-status:not(:empty),
+    .results-message:not(:empty) {
+      animation: statusFade .3s ease both;
+    }
+
+    .result-fill {
+      transition: width .75s cubic-bezier(.22, 1, .36, 1),
+                  background-color .25s ease;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+      }
     }
 
     @media (max-width: 760px) {

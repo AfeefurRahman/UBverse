@@ -6,7 +6,7 @@
 
   <meta
     name="description"
-    content="UBverse is a student-built campus companion for international students at the University at Buffalo."
+    content="Track your daily mood with UBverse and view your saved mood results in a simple campus-focused dashboard."
   >
 
   <title>Mood Tracker | UBverse</title>
@@ -24,7 +24,203 @@
   >
 
   <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .mood-page {
+      width: min(780px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 38px 0 28px;
+    }
+
+    .mood-page-header {
+      text-align: center;
+      margin-bottom: 46px;
+    }
+
+    .mood-page-header h1 {
+      margin: 0 0 8px;
+      color: #f8fafc;
+      font-size: clamp(2rem, 4vw, 2.65rem);
+      line-height: 1.12;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .mood-page-header p {
+      margin: 0;
+      color: #c4cde0;
+      font-size: 1rem;
+      line-height: 1.55;
+    }
+
+    .mood-card {
+      background: #232634;
+      border: 1px solid #383d50;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.12);
+      padding: 28px 26px;
+      margin-bottom: 22px;
+    }
+
+    .mood-choice-card {
+      text-align: center;
+      padding-top: 31px;
+      padding-bottom: 31px;
+    }
+
+    .mood-choice-card h2 {
+      margin: 0 0 24px;
+      color: #f8fafc;
+      font-size: 1.45rem;
+      font-weight: 800;
+    }
+
+    .mood-options {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .mood-option {
+      appearance: none;
+      width: 100%;
+      min-height: 88px;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      background: #34394f;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 13px 8px;
+      font-family: inherit;
+      font-weight: 800;
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
+    }
+
+    .mood-option:hover:not(:disabled) {
+      background: #3e4660;
+      border-color: #52617f;
+      transform: translateY(-2px);
+    }
+
+    .mood-option.selected {
+      background: #2563eb;
+      border-color: #5b8cff;
+    }
+
+    .mood-option:disabled {
+      cursor: not-allowed;
+      opacity: .72;
+    }
+
+    .mood-emoji {
+      font-size: 1.55rem;
+      line-height: 1;
+    }
+
+    .mood-name {
+      font-size: .92rem;
+      line-height: 1.15;
+    }
+
+    #vote-status {
+      min-height: 22px;
+      margin: 14px 0 0;
+      color: #b9c6df;
+      font-size: .9rem;
+      line-height: 1.45;
+    }
+
+    #vote-status.success {
+      color: #86efac;
+    }
+
+    .results-card h3 {
+      margin: 0 0 6px;
+      color: #f8fafc;
+      font-size: 1.25rem;
+      font-weight: 800;
+    }
+
+    .results-card > p {
+      margin: 0 0 21px;
+      color: #bdc7da;
+      font-size: .98rem;
+    }
+
+    .result-row {
+      display: grid;
+      grid-template-columns: 82px minmax(0,1fr) 42px;
+      align-items: center;
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .result-label {
+      color: #f3f6fb;
+      font-size: .92rem;
+      font-weight: 800;
+    }
+
+    .result-track {
+      position: relative;
+      height: 18px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #111521;
+    }
+
+    .result-fill {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      transition: width .35s ease;
+    }
+
+    .result-percent {
+      color: #c7d1e4;
+      text-align: right;
+      font-size: .92rem;
+    }
+
+    .results-message {
+      margin-top: 19px;
+      color: #bdc7da;
+      font-size: .92rem;
+      line-height: 1.5;
+    }
+
+    .mood-note {
+      margin: 54px auto 0;
+      text-align: center;
+      color: #9daac5;
+      font-size: .84rem;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 760px) {
+      .mood-page { padding-top: 28px; }
+      .mood-page-header { margin-bottom: 30px; }
+      .mood-card { padding: 22px 18px; }
+      .mood-options { grid-template-columns: repeat(2,1fr); }
+      .mood-option:last-child { grid-column: 1 / -1; }
+    }
+
+    @media (max-width: 460px) {
+      .mood-options { grid-template-columns: 1fr; }
+      .mood-option:last-child { grid-column: auto; }
+      .result-row {
+        grid-template-columns: 74px minmax(0,1fr) 38px;
+        gap: 8px;
+      }
+    }
+  </style>
 </head>
+
 <body>
   <div class="topnav">
     <div class="topnav-content">
@@ -32,6 +228,7 @@
         <img src="ub.jpg" alt="UB Logo" class="logo">
         <span class="logo-text">UBverse</span>
       </div>
+
       <div class="nav-right">
         <a href="index.html">Home</a>
         <a href="translator.html">Translator</a>
@@ -43,3 +240,252 @@
   </div>
 
   <main class="mood-page">
+    <header class="mood-page-header">
+      <h1>❤️ Campus Mood Tracker</h1>
+      <p>Share how you feel today and see your saved UBverse mood results.</p>
+    </header>
+
+    <section class="mood-card mood-choice-card">
+      <h2>How are you feeling today?</h2>
+
+      <div class="mood-options" role="group" aria-label="Choose today's mood">
+        <button class="mood-option" type="button" data-mood="Amazing">
+          <span class="mood-emoji">😍</span>
+          <span class="mood-name">Amazing</span>
+        </button>
+
+        <button class="mood-option" type="button" data-mood="Good">
+          <span class="mood-emoji">😊</span>
+          <span class="mood-name">Good</span>
+        </button>
+
+        <button class="mood-option" type="button" data-mood="Okay">
+          <span class="mood-emoji">😐</span>
+          <span class="mood-name">Okay</span>
+        </button>
+
+        <button class="mood-option" type="button" data-mood="Not Great">
+          <span class="mood-emoji">😕</span>
+          <span class="mood-name">Not Great</span>
+        </button>
+
+        <button class="mood-option" type="button" data-mood="Tough">
+          <span class="mood-emoji">😢</span>
+          <span class="mood-name">Tough</span>
+        </button>
+      </div>
+
+      <p id="vote-status" aria-live="polite"></p>
+    </section>
+
+    <section class="mood-card results-card" aria-live="polite">
+      <h3>Campus Mood Today</h3>
+      <p>Overall moods saved in this browser:</p>
+
+      <div class="result-row">
+        <div class="result-label">Amazing</div>
+        <div class="result-track"><div id="amazing-bar" class="result-fill"></div></div>
+        <div id="amazing-percent" class="result-percent">0%</div>
+      </div>
+
+      <div class="result-row">
+        <div class="result-label">Good</div>
+        <div class="result-track"><div id="good-bar" class="result-fill"></div></div>
+        <div id="good-percent" class="result-percent">0%</div>
+      </div>
+
+      <div class="result-row">
+        <div class="result-label">Okay</div>
+        <div class="result-track"><div id="okay-bar" class="result-fill"></div></div>
+        <div id="okay-percent" class="result-percent">0%</div>
+      </div>
+
+      <div class="result-row">
+        <div class="result-label">Not Great</div>
+        <div class="result-track"><div id="notgreat-bar" class="result-fill"></div></div>
+        <div id="notgreat-percent" class="result-percent">0%</div>
+      </div>
+
+      <div class="result-row">
+        <div class="result-label">Tough</div>
+        <div class="result-track"><div id="tough-bar" class="result-fill"></div></div>
+        <div id="tough-percent" class="result-percent">0%</div>
+      </div>
+
+      <div id="results-message" class="results-message">
+        No mood votes have been saved yet.
+      </div>
+    </section>
+
+    <p class="mood-note">
+      This GitHub Pages version stores anonymous mood votes only in this browser.
+    </p>
+  </main>
+
+  <script>
+    (() => {
+      const STORAGE_KEY = 'ubverseCampusMood';
+      const VOTE_DATE_KEY = 'ubverseMoodVoteDate';
+      const SELECTED_MOOD_KEY = 'ubverseMoodSelectedToday';
+
+      const defaults = {
+        Amazing: 0,
+        Good: 0,
+        Okay: 0,
+        'Not Great': 0,
+        Tough: 0
+      };
+
+      const config = {
+        Amazing: { bar: 'amazing-bar', percent: 'amazing-percent', color: '#22c55e' },
+        Good: { bar: 'good-bar', percent: 'good-percent', color: '#38bdf8' },
+        Okay: { bar: 'okay-bar', percent: 'okay-percent', color: '#eab308' },
+        'Not Great': { bar: 'notgreat-bar', percent: 'notgreat-percent', color: '#f97316' },
+        Tough: { bar: 'tough-bar', percent: 'tough-percent', color: '#ef4444' }
+      };
+
+      const comments = {
+        Amazing: 'Amazing is currently the most selected mood. 🎉',
+        Good: 'Good is currently the most selected mood. 🙂',
+        Okay: 'Okay is currently the most selected mood. 😐',
+        'Not Great': 'Not Great is currently the most selected mood. 😕',
+        Tough: 'Tough is currently the most selected mood. 😢'
+      };
+
+      function todayKey() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      }
+
+      function loadCounts() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+          if (!saved || typeof saved !== 'object') return { ...defaults };
+
+          return {
+            Amazing: Number(saved.Amazing) || 0,
+            Good: Number(saved.Good) || 0,
+            Okay: Number(saved.Okay) || 0,
+            'Not Great': Number(saved['Not Great']) || 0,
+            Tough: Number(saved.Tough) || 0
+          };
+        } catch {
+          return { ...defaults };
+        }
+      }
+
+      function saveCounts(counts) {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(counts));
+          return true;
+        } catch {
+          return false;
+        }
+      }
+
+      const buttons = [...document.querySelectorAll('.mood-option')];
+      const status = document.getElementById('vote-status');
+      const resultsMessage = document.getElementById('results-message');
+      let counts = loadCounts();
+
+      function renderResults() {
+        const total = Object.values(counts).reduce((sum, value) => sum + value, 0);
+
+        Object.entries(config).forEach(([mood, item]) => {
+          const percent = total === 0 ? 0 : Math.round((counts[mood] / total) * 100);
+
+          const bar = document.getElementById(item.bar);
+          const percentText = document.getElementById(item.percent);
+
+          bar.style.width = `${percent}%`;
+          bar.style.backgroundColor = item.color;
+          percentText.textContent = `${percent}%`;
+        });
+
+        if (total === 0) {
+          resultsMessage.textContent = 'No mood votes have been saved yet.';
+          return;
+        }
+
+        const topMood = Object.keys(counts).reduce((best, mood) =>
+          counts[mood] > counts[best] ? mood : best
+        );
+
+        resultsMessage.textContent =
+          `${comments[topMood]} Total saved votes in this browser: ${total}.`;
+      }
+
+      function renderVoteState() {
+        let votedToday = false;
+        let selectedMood = null;
+
+        try {
+          votedToday = localStorage.getItem(VOTE_DATE_KEY) === todayKey();
+          selectedMood = votedToday
+            ? localStorage.getItem(SELECTED_MOOD_KEY)
+            : null;
+        } catch {}
+
+        buttons.forEach(button => {
+          button.disabled = votedToday;
+          button.classList.toggle(
+            'selected',
+            votedToday && button.dataset.mood === selectedMood
+          );
+        });
+
+        if (votedToday) {
+          status.className = 'success';
+          status.textContent =
+            `Today's mood saved${selectedMood ? `: ${selectedMood}` : ''}. You can vote again tomorrow.`;
+        } else {
+          status.className = '';
+          status.textContent = 'Choose one mood for today.';
+        }
+      }
+
+      buttons.forEach(button => {
+        button.addEventListener('click', () => {
+          let votedToday = false;
+
+          try {
+            votedToday = localStorage.getItem(VOTE_DATE_KEY) === todayKey();
+          } catch {}
+
+          if (votedToday) {
+            renderVoteState();
+            return;
+          }
+
+          const mood = button.dataset.mood;
+          if (!Object.prototype.hasOwnProperty.call(counts, mood)) return;
+
+          counts[mood] += 1;
+
+          const saved = saveCounts(counts);
+
+          try {
+            localStorage.setItem(VOTE_DATE_KEY, todayKey());
+            localStorage.setItem(SELECTED_MOOD_KEY, mood);
+          } catch {}
+
+          renderResults();
+          renderVoteState();
+
+          if (!saved) {
+            status.className = 'success';
+            status.textContent =
+              `Mood selected: ${mood}. Your browser blocked permanent storage, so it may reset later.`;
+          }
+        });
+      });
+
+      renderResults();
+      renderVoteState();
+    })();
+  </script>
+</body>
+</html>

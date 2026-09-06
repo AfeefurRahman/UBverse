@@ -79,7 +79,7 @@ I can help with everyday life at UB and around Buffalo. Ask about food, campus c
       const loadingMsg = appendMessage('Typing', 'bot', true);
 
       try {
-        const response = await fetch('/api/chat', {
+          const res = await fetch('https://ubverse-api.onrender.com/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ message, history })
